@@ -11,25 +11,31 @@
         <h2>Crear una cuenta</h2>
         <select id="countrySelect"></select>
         <input type="email" placeholder="Dirección de correo electrónico">
-        <input type="text" placeholder="Nombre">
-        <input type="text" placeholder="Apellido">
+        <div class="name-fields">
+            <input type="text" placeholder="Nombre">
+            <input type="text" placeholder="Apellido">
+        </div>
         <input type="text" placeholder="Nombre en pantalla">
         <input type="password" placeholder="Contraseña">
         <div class="terms">
             <input type="checkbox" id="terms" onchange="enableButton()">
-            <label for="terms">He leído y acepto los términos</label>
+            <label for="terms">He leído y acepto las <a href="#">Condiciones de servicio</a></label>
         </div>
         <button id="registerButton" disabled>Continuar</button>
+        <div class="links">
+            <p>¿Ya tienes una cuenta? <a href="#">Iniciar sesión</a></p>
+            <a href="#">Política de privacidad</a>
+        </div>
     </div>
 
     <script>
         function enableButton() {
-            document.getElementById("registerButton").disabled = !document.getElementById("terms").checked;
-            document.getElementById("registerButton").style.backgroundColor = document.getElementById("terms").checked ? "#007BFF" : "grey";
-            document.getElementById("registerButton").style.cursor = document.getElementById("terms").checked ? "pointer" : "not-allowed";
+            const registerButton = document.getElementById("registerButton");
+            registerButton.disabled = !document.getElementById("terms").checked;
+            registerButton.style.backgroundColor = registerButton.disabled ? "grey" : "#007BFF";
+            registerButton.style.cursor = registerButton.disabled ? "not-allowed" : "pointer";
         }
 
-        // Lista de países en formato JSON
         const countries = [
             "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
             "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
@@ -57,7 +63,6 @@
             "Zambia", "Zimbabwe"
         ];
 
-        // Insertar opciones en el select
         const countrySelect = document.getElementById("countrySelect");
         countries.forEach(country => {
             const option = document.createElement("option");
