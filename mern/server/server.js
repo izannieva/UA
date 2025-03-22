@@ -2,6 +2,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { connectDB } from "./db/connection.js"; // Asegúrate de que la ruta sea correcta
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config(); // Cargar variables de entorno
 
@@ -10,6 +11,10 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+//rutas
+app.use("/user", userRoutes);
+
 
 // Conectar a la base de datos y luego iniciar el servidor
 connectDB().then(() => {
