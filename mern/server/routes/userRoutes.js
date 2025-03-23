@@ -1,30 +1,9 @@
-
 import express from "express";
-import { client } from "../db/connection.js";
+import { addUser, getUsers } from "../controllers/userControllers.js";
+
 const router = express.Router();
 
-//Obtener todos los usuarios
-router.get("/", async (req, res) => {
-  try {
-    const db = client.db("UA-bdd");
-    const user = await db.collection("User").find().toArray();
-    res.json(user);
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-
-// Crear un nuevo usuario
-router.post("/", async (req, res) => {
-  try {
-    const db = client.db("UA-bdd");
-    const result = await db.collection("User").insertOne(req.body);
-    res.status(201).json({ message: "Usuario creado", id: result.insertedId });
-  } catch (error) {
-    res.status(400).json({ error: "Error al crear usuario" });
-  }
-});
+router.get("/", getUsers);  // Ahora usa el controller
+router.post("/", addUser);  // Ahora usa el controller
 
 export default router;
