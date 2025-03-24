@@ -1,4 +1,4 @@
-//estructura de los datos (MODELS)
+//consultas a la bdd
 import { client } from "../db/connection.js";
 
 const db = client.db("UA-bdd");

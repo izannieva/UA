@@ -13,9 +13,16 @@ export const getUsers = async (req, res) => {
 
 export const addUser = async (req, res) => {
     try {
-        const newUser = await createUser(req.body);
+        const { nombre, correo, pw } = req.body;
+
+        if (!nombre || !correo || !pw) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+
+        const newUser = await createUser({ nombre, correo, pw }); // Guardar en la BD
         res.status(201).json({ message: "Usuario creado", id: newUser.insertedId });
     } catch (error) {
         res.status(400).json({ error: "Error al crear usuario" });
     }
 };
+

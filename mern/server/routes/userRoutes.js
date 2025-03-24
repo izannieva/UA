@@ -1,3 +1,4 @@
+//definicion endpoints
 import express from "express";
 import { addUser, getUsers } from "../controllers/userControllers.js";
 
