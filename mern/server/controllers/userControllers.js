@@ -1,4 +1,5 @@
 //manejar http request
+import bcrypt from "bcryptjs";
 
 import { createUser, getAllUsers } from "../models/userModel.js";
 
@@ -18,8 +19,19 @@ export const addUser = async (req, res) => {
         if (!nombre || !correo || !pw || !apellido || !usuario || !pais) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
-
-        const newUser = await createUser({ nombre, correo, pw, apellido, usuario, pais}); // Guardar en la BD
+        // Encriptar contraseña
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(pw, salt);
+        
+        const newUser = await createUser({
+            nombre,
+            correo,
+            pw: hashedPassword,
+            apellido,
+            usuario, 
+            pais
+        });
+            
         res.status(201).json({ message: "Usuario creado", id: newUser.insertedId });
     } catch (error) {
         res.status(400).json({ error: "Error al crear usuario" });
