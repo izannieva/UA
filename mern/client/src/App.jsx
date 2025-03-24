@@ -4,6 +4,7 @@ import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
+    //defiinicion de las rutas
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/register" element={<RegisterPage />} />

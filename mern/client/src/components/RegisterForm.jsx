@@ -20,7 +20,7 @@ const RegisterForm = () => {
     
     // Validación del correo electrónico con regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!emailRegex.test(formData.correo)) {
         setMessage("Introduce un correo electrónico válido.");
         console.error("Error: Formato de correo inválido.");
         return;
