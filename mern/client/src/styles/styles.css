@@ -1,54 +1,83 @@
-/* Estilos generales */
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #0d0d0d;
+  color: white;
+  text-align: center;
+}
+
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  
-  /* Contenedor principal */
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Botón */
-  .button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Formulario */
-  .form-container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .form-container button {
-    width: 100%;
-  }
-  
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+
+.button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 24px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  min-width: 160px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+
+.button:first-of-type {
+  animation-delay: 0.3s;
+}
+
+.button:last-of-type {
+  animation-delay: 0.5s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+
+.form-container {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.1);
+  width: 300px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #222;
+  color: white;
+}
+
+.form-container button {
+  width: 100%;
+}

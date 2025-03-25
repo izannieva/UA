@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import '../styles/stylesRegistro.css';
 
 const RegisterForm = () => {
@@ -137,8 +138,8 @@ const RegisterForm = () => {
       </button>
 
       <div className="links">
-        <p>¿Ya tienes una cuenta? <a href="#">Iniciar sesión</a></p>
-        <a href="#">Política de privacidad</a>
+        <p>¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link></p>
+        <Link to="#">Política de privacidad</Link>
       </div>
 
       {message && <p>{message}</p>}
