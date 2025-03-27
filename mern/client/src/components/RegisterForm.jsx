@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import '../styles/stylesRegistro.css';
 
 const RegisterForm = () => {
@@ -14,6 +14,7 @@ const RegisterForm = () => {
 
   const [countries, setCountries] = useState([]);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // Inicializa useNavigate
 
   useEffect(() => {
     setCountries([
@@ -33,10 +34,12 @@ const RegisterForm = () => {
     }));
   };
 
+
+
   const validateForm = () => {
     const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-
+    
     return (
       emailRegex.test(formData.correo) &&
       nameRegex.test(formData.nombre) &&
@@ -68,6 +71,8 @@ const RegisterForm = () => {
       if (response.ok) {
         setMessage("Registro exitoso");
         console.log("Usuario creado:", data);
+        setTimeout(() => navigate("/login"), 2000); // Redirige al login después de 2 segundos
+
       } else {
         setMessage("Error: " + (data.error || "No se pudo registrar"));
       }
@@ -133,13 +138,13 @@ const RegisterForm = () => {
         required
       />
 
-      <button type="submit" disabled={!validateForm()}>
+      <button type="submit"  disabled={!validateForm()}>
         Continuar
       </button>
 
       <div className="links">
         <p>¿Ya tienes una cuenta? <Link to="/login">Iniciar sesión</Link></p>
-        <Link to="#">Política de privacidad</Link>
+        <Link to="/">Política de privacidad</Link>
       </div>
 
       {message && <p>{message}</p>}
