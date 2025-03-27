@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import '../styles/stylesRegistro.css';
 
 const LoginForm = () => {
@@ -9,7 +9,7 @@ const LoginForm = () => {
   });
 
   const [message, setMessage] = useState("");
-
+  const navigate = useNavigate(); // Inicializa useNavigate
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -44,8 +44,11 @@ const LoginForm = () => {
       const data = await response.json();
 
       if (response.ok) {
+        
         setMessage("Inicio de sesión exitoso");
         console.log("Usuario autenticado:", data);
+        setTimeout(() => navigate("/")); // Redirige a la landing
+
         
       } else {
         setMessage("Error: " + (data.error || "Credenciales incorrectas"));

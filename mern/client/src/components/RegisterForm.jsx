@@ -71,7 +71,7 @@ const RegisterForm = () => {
       if (response.ok) {
         setMessage("Registro exitoso");
         console.log("Usuario creado:", data);
-        setTimeout(() => navigate("/login"), 2000); // Redirige al login después de 2 segundos
+        setTimeout(() => navigate("/login")); // Redirige al login
 
       } else {
         setMessage("Error: " + (data.error || "No se pudo registrar"));
