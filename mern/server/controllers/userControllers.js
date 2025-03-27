@@ -1,5 +1,6 @@
 //manejar http request
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 import { createUser, getAllUsers } from "../models/userModel.js";
 
@@ -38,3 +39,31 @@ export const addUser = async (req, res) => {
     }
 };
 
+export const loginUser = async (req, res) => {
+    try {
+        const { correo, pw } = req.body;
+
+        if (!correo || !pw) {
+            return res.status(400).json({ error: "Correo y contraseña son obligatorios" });
+        }
+        //busca por correo
+        const user = await getAllUsers().then(users => users.find(u => u.correo === correo));
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        //compara contraseñas
+        const isPasswordValid = await bcrypt.compare(pw, user.pw);
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: "Contraseña incorrecta" });
+        }
+
+        // Generar un token JWT
+        const token = jwt.sign({ id: user._id, correo: user.correo }, process.env.JWT_SECRET, {
+            expiresIn: "1h",
+        });
+
+        res.json({ message: "Login exitoso", token });
+    } catch (error) {
+        res.status(500).json({ error: "Error al iniciar sesión" });
+    }
+};
