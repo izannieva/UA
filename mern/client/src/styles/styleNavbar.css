@@ -1,0 +1,58 @@
+/* General navbar styles */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #18181b;
+  padding: 16px 32px;
+  height: 64px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Logo */
+.navbar-logo img {
+  height: 40px;
+  cursor: pointer;
+}
+
+/* Navbar actions (buttons or profile icon) */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Buttons */
+.navbar-actions .button {
+  background: #a78bfa;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.navbar-actions .button:hover {
+  background: #c4b5fd;
+}
+
+/* Profile icon */
+.profile-icon {
+  font-size: 1.8rem;
+  color: #a78bfa;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.profile-icon:hover {
+  color: #c4b5fd;
+}
