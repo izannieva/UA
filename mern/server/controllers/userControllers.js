@@ -2,7 +2,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
-import { createUser, getAllUsers } from "../models/userModel.js";
+import { createUser, deleteUser, getAllUsers, getUserById, updateUser } from "../models/userModel.js";
 
 export const getUsers = async (req, res) => {
     try {
@@ -65,5 +65,50 @@ export const loginUser = async (req, res) => {
         res.json({ message: "Login exitoso", token });
     } catch (error) {
         res.status(500).json({ error: "Error al iniciar sesión" });
+    }
+};
+
+// Obtener usuario por ID
+export const getUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await getUserById(id);
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: "Error al obtener usuario" });
+    }
+};
+
+// Actualizar usuario
+export const editUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedData = req.body;
+
+        const result = await updateUser(id, updatedData);
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        res.json({ message: "Usuario actualizado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar usuario" });
+    }
+};
+
+// Eliminar usuario
+export const borrarUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const result = await deleteUser(id);
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        res.json({ message: "Usuario eliminado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al eliminar usuario" });
     }
 };
