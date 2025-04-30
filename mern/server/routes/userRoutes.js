@@ -6,7 +6,7 @@ import { verifyToken } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 router.get("/", getUsers);  // get usuarios
-router.post("/",verifyToken, addUser);  // post usuario
+router.post("/", addUser);  // post usuario
 router.post("/login", loginUser); // inicio sesion
 router.get("/:id",verifyToken, getUser); // Obtener usuario por ID
 router.put("/:id",verifyToken, editUser); // Editar usuario

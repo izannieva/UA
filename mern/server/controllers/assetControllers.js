@@ -1,4 +1,5 @@
-import { createAsset, getAllAssets, getAssetById } from "../models/assetModel";
+
+import { createAsset, deleteAsset, getAllAssets, getAssetById } from "../models/assetModel.js";
 
 export const getAssets = async (req, res) => {
     try {
