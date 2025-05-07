@@ -9,8 +9,9 @@ export const getAllAssets = async () => {
 };
 
 export const createAsset = async (data) => {
+    console.log("Datos que se insertarán en la base de datos:", data); // Log para depuración
     return await db.collection("Asset").insertOne(data);
-};
+  };
 export const getAssetById = async (id) => {
     return await db.collection("Asset").findOne({ _id: new ObjectId(id) });
 };

@@ -13,45 +13,40 @@ export const getAssets = async (req, res) => {
 
 export const addAsset = async (req, res) => {
     try {
-        const {
-            titulo,
-            descripcion,
-            tipo,
-            fechaSubida,
-            imagen,
-            archivo,
-            autorId,
-            likes = 0,
-            descargas = 0,
-            comentarios = []
-        } = req.body;
-
-        // Validar campos obligatorios
-        if (!titulo || !descripcion || !tipo || !fechaSubida || !imagen || !archivo || !autorId) {
-            return res.status(400).json({ error: "Todos los campos obligatorios deben ser proporcionados" });
-        }
-
-        // Crear el nuevo asset
-        const newAsset = {
-            titulo,
-            descripcion,
-            tipo,
-            fechaSubida: new Date(fechaSubida), // Asegurarse de que sea un objeto Date
-            imagen,
-            archivo,
-            autorId,
-            likes,
-            descargas,
-            comentarios
-        };
-
-        const result = await createAsset(newAsset);
-
-        res.status(201).json({ message: "Asset creado exitosamente", id: result.insertedId });
+      const {
+        titulo,
+        descripcion,
+        categoria,
+        fechaSubida,
+        imagen,
+        tags,
+        modelo,
+        autorId,
+      } = req.body;
+  
+      // Validar que tags sea un array
+      const tagsArray = Array.isArray(tags) ? tags : JSON.parse(tags || "[]");
+  
+      // Crear el nuevo asset
+      const newAsset = {
+        titulo: titulo || null,
+        descripcion: descripcion || null,
+        categoria: categoria || null,
+        fechaSubida: fechaSubida ? new Date(fechaSubida) : new Date(),
+        imagen: imagen || null,
+        tags: tagsArray, // Guardar tags como array
+        modelo: modelo || null,
+        autorId: req.user?.id || null, // Obtener el autorId del token
+      };
+  
+      const result = await createAsset(newAsset);
+  
+      res.status(201).json({ message: "Asset creado exitosamente", id: result.insertedId });
     } catch (error) {
-        res.status(500).json({ error: "Error al crear el asset" });
+      console.error("Error al crear el asset:", error); // Log para depuración
+      res.status(500).json({ error: "Error al crear el asset" });
     }
-};
+  };
 
 // Obtener usuario por ID
 export const getAsset = async (req, res) => {

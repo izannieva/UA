@@ -11,5 +11,6 @@ router.post("/login", loginUser); // inicio sesion
 router.get("/:id",verifyToken, getUser); // Obtener usuario por ID
 router.put("/:id",verifyToken, editUser); // Editar usuario
 router.delete("/:id",verifyToken, borrarUser); // Eliminar usuario
+router.get("/perfil",verifyToken, getUser); // Obtener perfil de usuario
 
 export default router;

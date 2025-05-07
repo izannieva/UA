@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/styleUploadAsset.css";
 
 function UploadAssetPage() {
@@ -7,25 +8,28 @@ function UploadAssetPage() {
     description: "",
     tags: [],
     categories: "",
-    file: null,
-    imagen: null,
+    modelo: null, // Archivo del modelo
+    imagen: null, // Imagen asociada
   });
   const [tagsInput, setTagsInput] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
 
-  // Manejo de campos
+  useEffect(() => {
+    // Verificar si el usuario está autenticado
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login"); // Redirigir al login si no hay token
+    }
+  }, [navigate]);
+
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    if (name === "file" || name === "imagen") {
+    if (type === "file") {
       setForm((prev) => ({
         ...prev,
         [name]: files[0],
-      }));
-    } else if (name === "categories") {
-      setForm((prev) => ({
-        ...prev,
-        categories: value,
       }));
     } else {
       setForm((prev) => ({
@@ -35,7 +39,6 @@ function UploadAssetPage() {
     }
   };
 
-  // Añadir tags como array
   const handleTagsChange = (e) => {
     setTagsInput(e.target.value);
     setForm((prev) => ({
@@ -52,32 +55,31 @@ function UploadAssetPage() {
     setError("");
     setSuccess("");
 
-    // Validación de campos obligatorios
-    if (
-      !form.title.trim() ||
-      !form.description.trim() ||
-      !form.categories.trim() ||
-      !form.tags.length ||
-      !form.file ||
-      !form.imagen
-    ) {
-      setError("Por favor, rellena todos los campos obligatorios.");
-      return;
-    }
-
     try {
-      const formData = new FormData();
-      formData.append("titulo", form.title);
-      formData.append("descripcion", form.description);
-      formData.append("tipo", form.categories);
-      formData.append("tags", JSON.stringify(form.tags));
-      formData.append("fechaSubida", new Date().toISOString());
-      formData.append("archivo", form.file);
-      formData.append("imagen", form.imagen);
-      formData.append("autorId", "USER_ID"); // Reemplaza por el ID real del usuario
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("No estás autenticado. Por favor, inicia sesión.");
+        return;
+      }
 
-      const res = await fetch("/api/assets", {
+      // Crear el FormData para enviar archivos
+      const formData = new FormData();
+      if (form.title) formData.append("titulo", form.title);
+      if (form.description) formData.append("descripcion", form.description);
+      if (form.categories) formData.append("categoria", form.categories);
+      if (form.tags.length) {
+        form.tags.forEach((tag) => formData.append("tags[]", tag)); // Enviar cada tag como un elemento del array
+      }
+      if (form.modelo) formData.append("modelo", form.modelo); // Archivo del modelo
+      if (form.imagen) formData.append("imagen", form.imagen); // Imagen asociada
+      formData.append("fechaSubida", new Date().toISOString()); // Fecha actual
+
+      // Enviar la solicitud al backend
+      const res = await fetch("http://localhost:5050/asset", {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Enviar el token en la cabecera
+        },
         body: formData,
       });
 
@@ -87,17 +89,20 @@ function UploadAssetPage() {
         return;
       }
 
+      const data = await res.json();
+      console.log("Respuesta del servidor:", data); // Verificar la respuesta del servidor
       setSuccess("¡Asset subido correctamente!");
       setForm({
         title: "",
         description: "",
         tags: [],
         categories: "",
-        file: null,
+        modelo: null,
         imagen: null,
       });
       setTagsInput("");
     } catch (err) {
+      console.error("Error al subir el asset:", err);
       setError("Error de conexión al subir el asset.");
     }
   };
@@ -109,68 +114,58 @@ function UploadAssetPage() {
         {error && <div className="form-error">{error}</div>}
         {success && <div className="form-success">{success}</div>}
         <div className="form-row">
-          {/* Columna 1: Archivos */}
           <div className="form-group">
             <h3 className="section-title">Archivos</h3>
-            <label>Modelo <span style={{ color: "#a78bfa" }}>*</span></label>
+            <label>Modelo</label>
             <div className="file-upload">
-              <label htmlFor="file-upload-input">Examinar</label>
+              <label htmlFor="modelo-upload-input">Examinar</label>
               <input
-                id="file-upload-input"
+                id="modelo-upload-input"
                 type="file"
-                name="file"
+                name="modelo"
                 onChange={handleChange}
-                required
               />
               <span>o arrastra tu archivo</span>
             </div>
-            <label>Imagen <span style={{ color: "#a78bfa" }}>*</span></label>
+            <label>Imagen</label>
             <input
               type="file"
               name="imagen"
               accept="image/*"
               onChange={handleChange}
-              required
             />
           </div>
-          {/* Columna 2: Información */}
           <div className="form-group-2">
             <h3 className="section-title">Información</h3>
-            <label>Título <span style={{ color: "#a78bfa" }}>*</span></label>
+            <label>Título</label>
             <input
               type="text"
               name="title"
               value={form.title}
               onChange={handleChange}
-              required
             />
-            <label>Descripción <span style={{ color: "#a78bfa" }}>*</span></label>
+            <label>Descripción</label>
             <textarea
               name="description"
               value={form.description}
               onChange={handleChange}
-              required
             />
-            <label>Categorías <span style={{ color: "#a78bfa" }}>*</span></label>
+            <label>Categorías</label>
             <input
               type="text"
               name="categories"
               value={form.categories}
               onChange={handleChange}
-              required
             />
           </div>
-          {/* Columna 3: Tags y Acción */}
           <div className="form-group form-actions-group">
-            <h3 className="section-title">Etiquetas y Acción</h3>
-            <label>Tags <span style={{ color: "#a78bfa" }}>*</span></label>
+            <h3 className="section-title">Etiquetas</h3>
             <input
               type="text"
               name="tags"
               value={tagsInput}
               onChange={handleTagsChange}
               placeholder="ej: 3D, animación, textura"
-              required
             />
             <small className="input-helper">Separados por coma</small>
             <div className="form-actions">
