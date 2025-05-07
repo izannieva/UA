@@ -1,0 +1,100 @@
+.asset-page {
+    display: flex;
+    justify-content: center;
+    padding: 40px;
+    background-color: #101014;
+    color: white;
+    font-family: sans-serif;
+  }
+  
+  .asset-main {
+    display: flex;
+    flex-direction: row;
+    max-width: 1200px;
+    gap: 40px;
+  }
+  
+  .asset-image-section {
+    flex: 2;
+  }
+  
+  .main-image {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  .thumbnail-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .thumbnail {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  
+  .thumbnail:hover {
+    border-color: #00aced;
+  }
+  
+  .asset-info-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .publisher {
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .categories .tag {
+    background-color: #222;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .license select {
+    margin-top: 5px;
+    padding: 8px;
+    background: #1c1c1e;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .buy, .add-to-cart {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .buy {
+    background-color: #1ea7fd;
+    color: black;
+  }
+  
+  .add-to-cart {
+    background-color: #333;
+    color: white;
+  }
+  
