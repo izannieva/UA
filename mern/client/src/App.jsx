@@ -7,6 +7,7 @@ import Perfil from "./pages/Perfil";
 import RegisterPage from "./pages/RegisterPage";
 import ResultadoBusqueda from "./pages/ResultadoBusqueda";
 import UploadAssetPage from "./pages/UploadAssetPage";
+import AssetPage from "./pages/AssetPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,6 +28,7 @@ function App() {
         <Route path="/upload-asset" element={<UploadAssetPage />} />
         <Route path="/busqueda" element={<ResultadoBusqueda />} />
         <Route path="/perfil" element={<Perfil />} />
+        <Route path="/asset" element={<AssetPage />} />
       </Routes>
     </>
   );

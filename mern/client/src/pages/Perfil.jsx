@@ -1,4 +1,4 @@
-import "../styles/stylePerfil.css";
+import "../styles/StylePerfil.css";
 import { useState } from "react";
 
 function Perfil() {
