@@ -44,6 +44,8 @@ const LoginForm = () => {
       const data = await response.json();
 
       if (response.ok) {
+        // Guardar el token en localStorage
+        localStorage.setItem("token", data.token);
         
         setMessage("Inicio de sesión exitoso");
         console.log("Usuario autenticado:", data);
