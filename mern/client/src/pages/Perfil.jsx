@@ -1,6 +1,6 @@
 // src/pages/Perfil.jsx
 import { useEffect, useState } from "react";
-import "../styles/stylePerfil.css";
+import "../styles/StylePerfil.css";
 
 function Perfil() {
   const [userData, setUserData] = useState(null);
