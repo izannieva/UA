@@ -21,7 +21,7 @@ function Perfil() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,  // ✅ Asegúrate de que el token se envía correctamente
+            "Authorization": `Bearer ${token}`,
           },
         });
 
