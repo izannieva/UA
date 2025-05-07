@@ -7,6 +7,13 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
     localStorage.removeItem("token"); // Elimina el token al cerrar sesión
     setIsAuthenticated(false); // Actualiza el estado global
   };
+  
+  const [searchQuery, setSearchQuery] = useState(""); // Estado para la barra de búsqueda
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    console.log("Buscando:", searchQuery); // Aquí puedes redirigir o manejar la búsqueda
+  };
 
   return (
     <nav className="navbar">
@@ -15,6 +22,15 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
           <img src="/images/logo.png" alt="Nova Assets Logo" />
         </Link>
       </div>
+      <form className="navbar-search" onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Buscar assets..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button type="submit">🔍</button>
+      </form>
       <div className="navbar-actions">
         {!isAuthenticated ? (
           <>
