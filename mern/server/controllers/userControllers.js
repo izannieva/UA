@@ -71,17 +71,25 @@ export const loginUser = async (req, res) => {
 // Obtener usuario por ID
 export const getUser = async (req, res) => {
     try {
-        const { id } = req.params;
-        const user = await getUserById(id);
+        // Si el ID viene del token (usuario autenticado)
+        const userId = req.user?.id || req.params.id; // Prioriza el ID del token, pero permite usar req.params.id si está presente
+
+        if (!userId) {
+            return res.status(400).json({ error: "ID de usuario no proporcionado" });
+        }
+
+        const user = await getUserById(userId);
+
         if (!user) {
             return res.status(404).json({ error: "Usuario no encontrado" });
         }
+
         res.json(user);
     } catch (error) {
+        console.error("Error al obtener usuario:", error);
         res.status(500).json({ error: "Error al obtener usuario" });
     }
 };
-
 // Actualizar usuario
 export const editUser = async (req, res) => {
     try {
