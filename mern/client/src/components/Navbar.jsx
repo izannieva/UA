@@ -3,26 +3,12 @@ import { Link } from "react-router-dom";
 import "../styles/styleNavbar.css";
 
 function Navbar() {
-<<<<<<< HEAD
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Simula el estado de autenticación
   const [searchQuery, setSearchQuery] = useState(""); // Estado para la barra de búsqueda
 
   const handleSearch = (e) => {
     e.preventDefault();
     console.log("Buscando:", searchQuery); // Aquí puedes redirigir o manejar la búsqueda
-=======
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Verificar si el token existe en localStorage
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token); // Actualiza el estado según la existencia del token
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Elimina el token al cerrar sesión
-    setIsAuthenticated(false); // Actualiza el estado
->>>>>>> d4522395dfa179a79985694030e3227518193ef6
   };
 
   return (

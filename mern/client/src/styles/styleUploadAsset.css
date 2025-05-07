@@ -44,20 +44,22 @@ html, body {
 /* Layout */
 .form-row {
   display: grid;
-  grid-template-columns: 1.1fr 1.1fr 1fr;
+  grid-template-columns: 1fr 1fr 0.7fr; /* 3 columnas, la última más estrecha */
   gap: 32px;
+  align-items: flex-start;
 }
 
-.form-group {
+.form-group,
+.form-group-2 {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
+
 .form-group-2 {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
+  gap: 20px;
+}
+
 /* Inputs */
 input[type="text"],
 input[type="number"],
@@ -220,9 +222,11 @@ input[type="radio"] {
 /* Botones */
 .form-actions {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 0;
+  width: 100%;
 }
 
 button.primary, .button.primary {
@@ -234,6 +238,8 @@ button.primary, .button.primary {
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
+  width: 100%;
+  margin-top: 24px;
 }
 
 button.primary:hover, .button.primary:hover {
@@ -268,6 +274,7 @@ button.secondary:hover, .button.secondary:hover {
 
 @media (max-width: 900px) {
   .form-row {
+    display: flex;
     flex-direction: column;
     gap: 24px;
     min-height: unset;
@@ -275,6 +282,9 @@ button.secondary:hover, .button.secondary:hover {
   .upload-form {
     padding: 18px 2vw 12px 2vw;
     min-height: 95vh;
+  }
+  .form-actions button.primary {
+    width: 100%;
   }
 }
 
@@ -316,4 +326,29 @@ button.secondary:hover, .button.secondary:hover {
   background: #a78bfa;
   color: #18181b;
   border: 1.5px solid #a78bfa;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  color: #a78bfa;
+  margin-bottom: 12px;
+  margin-top: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.input-helper {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+
+.form-group,
+.form-group-2,
+.form-actions-group {
+  background: #23232a;
+  border-radius: 10px;
+  padding: 18px 18px 18px 18px;
+  box-shadow: 0 2px 12px 0 #00000010;
 }
