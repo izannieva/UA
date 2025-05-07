@@ -1,10 +1,19 @@
-import "../styles/styles.css";
 import { Link } from "react-router-dom";
+import "../styles/styles.css";
 
 function LandingPage() {
   return (
     
     <div className="landing-container">
+<<<<<<< HEAD
+=======
+      {/* <header className="landing-header">
+        <div className="search-bar">
+          <input type="text" placeholder="Buscar assets..." />
+          <button className="search-button">🔍</button>
+        </div>
+      </header> */}
+>>>>>>> d4522395dfa179a79985694030e3227518193ef6
       <main className="landing-main">
         <h1>¡Bienvenido a Nova Assets!</h1>
         <p>En esta página podrás encontrar infinidad de assets para todo tipo de videojuegos.</p>

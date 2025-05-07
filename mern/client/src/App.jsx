@@ -1,11 +1,11 @@
-import { Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import UploadAssetPage from "./pages/UploadAssetPage";
+import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import ResultadoBusqueda from "./pages/ResultadoBusqueda";
+import LandingPage from "./pages/LandingPage";
+import LoginPage from "./pages/LoginPage";
 import Perfil from "./pages/Perfil"; // <-- Importa la página de perfil
+import RegisterPage from "./pages/RegisterPage";
+import ResultadoBusqueda from "./pages/ResultadoBusqueda";
+import UploadAssetPage from "./pages/UploadAssetPage";
 
 function App() {
   return (

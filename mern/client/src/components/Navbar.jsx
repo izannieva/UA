@@ -1,14 +1,28 @@
-import React, { useState } from "react";
-import "../styles/styleNavbar.css";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "../styles/styleNavbar.css";
 
 function Navbar() {
+<<<<<<< HEAD
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Simula el estado de autenticación
   const [searchQuery, setSearchQuery] = useState(""); // Estado para la barra de búsqueda
 
   const handleSearch = (e) => {
     e.preventDefault();
     console.log("Buscando:", searchQuery); // Aquí puedes redirigir o manejar la búsqueda
+=======
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Verificar si el token existe en localStorage
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token); // Actualiza el estado según la existencia del token
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Elimina el token al cerrar sesión
+    setIsAuthenticated(false); // Actualiza el estado
+>>>>>>> d4522395dfa179a79985694030e3227518193ef6
   };
 
   return (
@@ -34,11 +48,12 @@ function Navbar() {
             <Link to="/register" className="button">Registrarse</Link>
           </>
         ) : (
-          <Link to="/profile">
-            <div className="profile-icon">
+          <>
+            <Link to="/perfil" className="profile-icon">
               <i className="fas fa-user-circle"></i>
-            </div>
-          </Link>
+            </Link>
+            <button onClick={handleLogout} className="button">Cerrar sesión</button>
+          </>
         )}
       </div>
     </nav>
