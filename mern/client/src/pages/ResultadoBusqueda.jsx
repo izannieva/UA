@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/styleResultadoBusqueda.css";
+import "../styles/StyleResultadoBusqueda.css";
 
 function ResultadoBusqueda() {
   // Datos estáticos simulados

@@ -36,6 +36,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
           <>
             <Link to="/login" className="button">Iniciar Sesión</Link>
             <Link to="/register" className="button">Registrarse</Link>
+            <Link to="/asset" className="button">MirarAsset</Link>
           </>
         ) : (
           <>
