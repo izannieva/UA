@@ -11,12 +11,14 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
     const email = localStorage.getItem("userEmail");
     if (email) setUserEmail(email);
   }, []);
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para la barra de búsqueda
+  
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log("Buscando:", searchQuery); // Aquí puedes redirigir o manejar la búsqueda
+    console.log("Buscando:", searchQuery);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userEmail");
@@ -26,26 +28,27 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
 
   return (
     <nav className="navbar">
-      <div className="navbar-logo">
-        <Link to="/">
+      <div className="navbar-left">
+        <Link to="/" className="navbar-logo">
           <img src="/images/logo.png" alt="Nova Assets Logo" />
         </Link>
+
+        <form className="navbar-search" onSubmit={handleSearch}>
+          <input
+            type="text"
+            placeholder="Buscar..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit">🔍</button>
+        </form>
       </div>
-      <form className="navbar-search" onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit">🔍</button>
-      </form>
+
       <div className="navbar-actions">
         {!isAuthenticated ? (
           <>
             <Link to="/login" className="button">Iniciar Sesión</Link>
             <Link to="/register" className="button">Registrarse</Link>
-            <Link to="/asset" className="button">MirarAsset</Link>
           </>
         ) : (
           <>

@@ -11,36 +11,45 @@
   top: 0;
   left: 0;
   z-index: 1000;
+  padding: 0 16px;
+  justify-content: space-between;
 }
 
+/* Navbar Left (Logo + Search) */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+/* Navbar Logo */
 .navbar-logo {
   display: flex;
   align-items: center;
-  margin-left: 16px;
+  margin-right: 16px;
 }
 
 .navbar-logo img {
   height: 40px;
   cursor: pointer;
 }
-/* Navbar search */
+
+/* Navbar Search */
 .navbar-search {
   display: flex;
-  margin-right: 50%;
+  align-items: center;
   gap: 8px;
-  flex: 1;
-  max-width: 300px;
-  margin-left: 1%;
 }
 
 .navbar-search input {
-  flex: 1;
-  padding: 10px 16px;
+  width: 240px;
+  padding: 8px 16px;
   border: 1.5px solid #333;
   border-radius: 8px;
   background: #232329;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: border-color 0.3s ease;
 }
 
@@ -73,12 +82,11 @@
   background: #c4b5fd;
 }
 
-/* Navbar actions (buttons or profile icon) */
+/* Navbar Actions */
 .navbar-actions {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-right: 16px;
 }
 
 /* Buttons */
@@ -89,22 +97,12 @@
   border: none;
   border-radius: 8px;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   text-align: center;
   width: auto;
+  transition: background 0.3s ease;
 }
 
 .navbar-actions .button:hover {
   background: #c4b5fd;
-}
-
-/* Profile icon */
-.profile-icon {
-  font-size: 1.5rem;
-  color: white;
-  cursor: pointer;
-}
-
-.profile-icon:hover {
-  color: #c4b5fd;
 }

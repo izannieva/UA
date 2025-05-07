@@ -1,0 +1,137 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #0d0d0d;
+    color: white;
+  }
+  
+  /* Landing Container */
+  .landing-container {
+    display: flex;
+    min-height: 100vh;
+    padding-top: 80px; /* Para evitar que se sobreponga con el navbar */
+  }
+  
+  .sidebar {
+    width: 280px;
+    background-color: #18181b;
+    padding: 32px 16px;
+    border-right: 1px solid #333;
+    color: #aaa;
+    flex-shrink: 0;
+    position: fixed;
+    top: 80px;
+    bottom: 0;
+    overflow-y: auto;
+  }
+  
+  .sidebar h2 {
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 12px;
+  }
+  
+  .sidebar ul li a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .sidebar ul li a:hover {
+    color: #a78bfa;
+  }
+  .landing-title {
+    font-size: 3rem;
+    color: #a78bfa;
+    margin-bottom: 20px;
+    text-align: center;
+    text-shadow: 0 4px 20px rgba(167, 139, 250, 0.5);
+  }
+  
+  /* Main Content */
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 32px;
+    margin-left: 280px;
+  }
+  
+  .header {
+    margin-bottom: 32px;
+  }
+  
+  .search-input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #232329;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    margin-top: 20px;
+  }
+  .search-input::placeholder {
+    color: #aaa;
+  }
+  
+  /* Assets Grid */
+  .assets-section {
+    background-color: #18181b;
+    border-radius: 12px;
+    padding: 24px;
+  }
+  
+  
+
+  .assets-section h2 {
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .assets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .asset-card {
+    background-color: #232329;
+    padding: 16px;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .asset-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+  
+  .asset-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .asset-title {
+    color: #fff;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+  }
+  
+  .asset-category {
+    color: #a78bfa;
+    font-size: 0.9rem;
+  }
+  
