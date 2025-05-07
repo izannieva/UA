@@ -35,13 +35,10 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
             <Link to="/asset" className="button">MirarAsset</Link>
           </>
         ) : (
-          <div className="navbar-user-menu">
-            <span>{userEmail}</span>
-            <div className="dropdown-menu">
-              <Link to="/perfil">Mi Perfil</Link>
-              <button onClick={handleLogout}>Cerrar Sesión</button>
-            </div>
-          </div>
+          <>
+            <Link to="/perfil" className="button">Ver Perfil</Link>
+            <button onClick={handleLogout} className="button">Cerrar Sesión</button>
+          </>
         )}
       </div>
     </nav>
