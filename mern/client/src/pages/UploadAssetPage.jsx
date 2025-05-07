@@ -27,10 +27,13 @@ function UploadAssetPage() {
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file") {
-      setForm((prev) => ({
-        ...prev,
-        [name]: files[0],
-      }));
+      if (files && files[0]) {
+        console.log("Archivo seleccionado:", files[0]);
+        setForm((prev) => ({
+          ...prev,
+          [name]: files[0],
+        }));
+      }
     } else {
       setForm((prev) => ({
         ...prev,
@@ -123,7 +126,9 @@ function UploadAssetPage() {
                 id="modelo-upload-input"
                 type="file"
                 name="modelo"
+                accept=".glb"
                 onChange={handleChange}
+                required
               />
               <span>o arrastra tu archivo</span>
             </div>

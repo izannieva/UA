@@ -12,6 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Servir archivos estáticos de la carpeta uploads
+app.use('/uploads', express.static('uploads'));
+
 //rutas
 app.use("/user", userRoutes);
 app.use("/asset", assetRoutes);
