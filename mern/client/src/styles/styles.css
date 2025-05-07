@@ -195,7 +195,6 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   min-width: 160px;
-  animation: fadeInUp 0.8s ease-out;
 }
 
 .button:first-of-type {

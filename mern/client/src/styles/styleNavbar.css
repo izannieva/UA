@@ -87,13 +87,14 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-right: 2%;
 }
 
 /* Buttons */
 .navbar-actions .button {
   padding: 8px 16px;
   background: #a78bfa;
-  color: white;
+  color: black;
   border: none;
   border-radius: 8px;
   text-decoration: none;

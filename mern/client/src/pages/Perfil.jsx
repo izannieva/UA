@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/stylePerfil.css";
+import "../styles/StylePerfil.css";
 
 function Perfil() {
   const [userData, setUserData] = useState(null);
@@ -44,8 +44,7 @@ function Perfil() {
     <div className="perfil-container">
       <aside className="perfil-sidebar">
         <div className="perfil-avatar-section">
-          <img src="/images/user-avatar.png" alt="Avatar del usuario" className="perfil-avatar" />
-          <h2>{userData.nombre}</h2>
+          <i class="fas fa-user"></i>
           <p>{userData.correo}</p>
         </div>
         <nav className="perfil-menu">
@@ -58,11 +57,7 @@ function Perfil() {
           </ul>
         </nav>
         <div className="perfil-storage">
-          <p>Storage</p>
-          <div className="storage-bar">
-            <div className="storage-used" style={{ width: "75%" }}></div>
-          </div>
-          <p>75.8GB / 100GB</p>
+          <button>Cambiar contraseña</button>
         </div>
       </aside>
 
