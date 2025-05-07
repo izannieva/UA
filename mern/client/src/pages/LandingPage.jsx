@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/styles.css";
 
 function LandingPage() {
+  const [assets, setAssets] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5050/asset")
+      .then((res) => res.json())
+      .then((data) => {
+        setAssets(data); // data es un array de assets
+      })
+      .catch(() => {
+        setAssets([]);
+      });
+  }, []);
+
   return (
-    
     <div className="landing-container">
       <main className="landing-main">
         <h1>¡Bienvenido a Nova Assets!</h1>
@@ -19,25 +32,23 @@ function LandingPage() {
             </ul>
           </div>
           <div className="assets-preview">
-            <h2>Modelos 3D <Link to="/busqueda?filter=modelos3d">→</Link></h2>
+            <h2>Assets Destacados</h2>
             <div className="assets-carousel">
-              <div className="asset-item">
-                <img src="/images/creeper.png" alt="Creeper" />
-                <div className="tags">
-                  <span>Minecraft</span>
-                  <span>3D</span>
-                  <span>Pack</span>
-                  <span>Characters</span>
+              {assets.map((asset) => (
+                <div className="asset-item" key={asset._id.$oid || asset._id}>
+                  <img
+                    src={
+                      asset.imagen
+                        ? `http://localhost:5050/uploads/${asset.imagen}`
+                        : "/images/placeholder.png"
+                    }
+                    alt={asset.titulo}
+                    style={{ width: "100%", height: 160, objectFit: "cover", borderRadius: 8 }}
+                  />
+                  <h4 style={{ color: "#fff", margin: "8px 0" }}>{asset.titulo}</h4>
+                  <p style={{ color: "#a78bfa", margin: 0 }}>{asset.categoria}</p>
                 </div>
-              </div>
-              <div className="asset-item">
-                <img src="/images/dinosaur.png" alt="Dinosaur" />
-                <div className="tags">
-                  <span>3D</span>
-                  <span>Animals</span>
-                  <span>Creatures</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
