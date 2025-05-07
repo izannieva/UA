@@ -12,11 +12,12 @@ import AssetPage from "./pages/AssetPage";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Comprobar si el token existe al cargar la app
   useEffect(() => {
-    // Verificar si el token existe en localStorage al cargar la app
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
   }, []);
+
 
   return (
     <>
