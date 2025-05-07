@@ -1,0 +1,159 @@
+/* General container */
+.resultado-busqueda-container {
+  padding: 24px;
+  background: #18181b;
+  color: #fff;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Alinea los filtros a la izquierda */
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-left: 0; /* Elimina cualquier padding adicional */
+  position: relative; /* Asegura que los filtros estén alineados correctamente */
+}
+
+.filter-button {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.filter-button.active {
+  background: #a78bfa;
+  color: #18181b;
+}
+
+.filter-button:hover {
+  background: #444;
+  transform: scale(1.05); /* Efecto de hover */
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto; /* Empuja la barra de búsqueda hacia la derecha */
+  flex-grow: 1; /* Hace que ocupe más espacio */
+  max-width: 700px; /* Aumenta el ancho máximo */
+}
+
+.search-bar input {
+  background: #18181b;
+  border: 1.5px solid #333;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #fff;
+  outline: none;
+  font-size: 1rem;
+  flex-grow: 1; /* Hace que el campo de búsqueda sea más grande */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-bar input:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.5); /* Efecto de enfoque */
+}
+
+.search-button {
+  background: #a78bfa;
+  color: #18181b;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  font-size: 1.2rem; /* Hace que la lupa sea más grande */
+  transition: background 0.2s, transform 0.2s;
+}
+
+.search-button:hover {
+  background: #c4b5fd;
+  transform: scale(1.1); /* Efecto de hover */
+}
+
+/* Assets grid */
+.assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.asset-card {
+  background: #232329;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.asset-card:hover {
+  transform: translateY(-4px); /* Efecto de hover */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.asset-thumbnail input {
+  margin-bottom: 8px;
+}
+
+.asset-info h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.asset-info p {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #aaa;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.pagination button {
+  background: #333;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.pagination button.active {
+  background: #a78bfa;
+  color: #18181b;
+}
+
+.pagination button:hover {
+  transform: scale(1.1); /* Efecto de hover */
+}
+
+.pagination button:disabled {
+  background: #444;
+  cursor: not-allowed;
+}
