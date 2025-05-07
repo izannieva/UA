@@ -1,10 +1,10 @@
 import LoginForm from "../components/LoginForm";
 import '../styles/stylesRegistro.css';
 
-function LoginPage() {
+function LoginPage({ setIsAuthenticated }) { // Recibe setIsAuthenticated como prop
   return (
     <div className="container">
-      <LoginForm />
+      <LoginForm setIsAuthenticated={setIsAuthenticated} /> {/* Pasa setIsAuthenticated a LoginForm */}
     </div>
   );
 }

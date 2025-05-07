@@ -1,19 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import "../styles/styleNavbar.css";
 
-function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Verificar si el token existe en localStorage
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token); // Actualiza el estado según la existencia del token
-  }, []);
-
+function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const handleLogout = () => {
     localStorage.removeItem("token"); // Elimina el token al cerrar sesión
-    setIsAuthenticated(false); // Actualiza el estado
+    setIsAuthenticated(false); // Actualiza el estado global
   };
 
   return (
@@ -26,7 +18,7 @@ function Navbar() {
       <div className="navbar-actions">
         {!isAuthenticated ? (
           <>
-            <Link to="/login" className="button">Iniciar sesión</Link>
+            <Link to="/login" className="button">Iniciar Sesión</Link>
             <Link to="/register" className="button">Registrarse</Link>
           </>
         ) : (
@@ -34,7 +26,7 @@ function Navbar() {
             <Link to="/perfil" className="profile-icon">
               <i className="fas fa-user-circle"></i>
             </Link>
-            <button onClick={handleLogout} className="button">Cerrar sesión</button>
+            <button onClick={handleLogout} className="button">Cerrar Sesión</button>
           </>
         )}
       </div>
