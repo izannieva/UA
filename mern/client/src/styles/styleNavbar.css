@@ -1,7 +1,6 @@
 /* General navbar styles */
 .navbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: #18181b;
   color: white;
@@ -14,21 +13,24 @@
   z-index: 1000;
 }
 
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+}
+
 .navbar-logo img {
   height: 40px;
   cursor: pointer;
-  margin-left: 16px;  
-  margin-right: 25px;
 }
-
 /* Navbar search */
 .navbar-search {
   display: flex;
-margin-right: 50%;
+  margin-right: 50%;
   gap: 8px;
   flex: 1;
   max-width: 300px;
-
+  margin-left: 1%;
 }
 
 .navbar-search input {
