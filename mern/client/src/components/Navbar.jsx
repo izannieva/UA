@@ -1,18 +1,22 @@
+// src/components/Navbar.jsx
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/styleNavbar.css";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Elimina el token al cerrar sesión
-    setIsAuthenticated(false); // Actualiza el estado global
-  };
-  
-  const [searchQuery, setSearchQuery] = useState(""); // Estado para la barra de búsqueda
+  const navigate = useNavigate();
+  const [userEmail, setUserEmail] = useState("");
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    console.log("Buscando:", searchQuery); // Aquí puedes redirigir o manejar la búsqueda
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) setUserEmail(email);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userEmail");
+    setIsAuthenticated(false);
+    navigate("/login");
   };
 
   return (
@@ -22,15 +26,7 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
           <img src="/images/logo.png" alt="Nova Assets Logo" />
         </Link>
       </div>
-      <form className="navbar-search" onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Buscar assets..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="submit">🔍</button>
-      </form>
+      
       <div className="navbar-actions">
         {!isAuthenticated ? (
           <>
@@ -38,12 +34,13 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
             <Link to="/register" className="button">Registrarse</Link>
           </>
         ) : (
-          <>
-            <Link to="/perfil" className="profile-icon">
-              <i className="fas fa-user-circle"></i>
-            </Link>
-            <button onClick={handleLogout} className="button">Cerrar Sesión</button>
-          </>
+          <div className="navbar-user-menu">
+            <span>{userEmail}</span>
+            <div className="dropdown-menu">
+              <Link to="/perfil">Mi Perfil</Link>
+              <button onClick={handleLogout}>Cerrar Sesión</button>
+            </div>
+          </div>
         )}
       </div>
     </nav>
