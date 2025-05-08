@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/styleLanding.css";
 
+const categorias = [
+  "Personajes",
+  "Objetos",
+  "Texturas",
+  "Packs"
+];
+
 function LandingPage() {
   const [assets, setAssets] = useState([]);
 
@@ -12,18 +19,24 @@ function LandingPage() {
       .catch(() => setAssets([]));
   }, []);
 
+  // Selecciona 5 assets aleatorios
+  const getRandomAssets = (arr, n) => {
+    if (!arr.length) return [];
+    const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, n);
+  };
+  const randomAssets = getRandomAssets(assets, 5);
+
   return (
     <div className="landing-container">
       <aside className="sidebar">
         <h2>Tipos de assets</h2>
         <ul>
-          <li><Link to="/busqueda?filter=3d">3D</Link></li>
-          <li><Link to="/busqueda?filter=entornos">Entornos</Link></li>
-          <li><Link to="/busqueda?filter=animaciones">Animaciones</Link></li>
-          <li><Link to="/busqueda?filter=audio">Audio</Link></li>
-          <li><Link to="/busqueda?filter=vfx">VFX</Link></li>
-          <li><Link to="/busqueda?filter=plantillas">Plantillas</Link></li>
-          <li><Link to="/busqueda?filter=plugins">Plugins</Link></li>
+          {categorias.map((cat) => (
+            <li key={cat}>
+              <Link to={`/busqueda?filter=${encodeURIComponent(cat)}`}>{cat}</Link>
+            </li>
+          ))}
         </ul>
       </aside>
 
@@ -35,7 +48,7 @@ function LandingPage() {
         <section className="assets-section">
           <h2>Assets Destacados</h2>
           <div className="assets-grid">
-            {assets.map((asset) => (
+            {randomAssets.map((asset) => (
               <div className="asset-card" key={asset._id.$oid || asset._id}>
                 <img
                   src={

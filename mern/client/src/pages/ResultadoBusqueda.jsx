@@ -1,26 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/StyleResultadoBusqueda.css";
+import { useLocation } from "react-router-dom";
 
 function ResultadoBusqueda() {
-  // Datos estáticos simulados
-  const assets = Array.from({ length: 30 }, (_, i) => ({
-    id: i + 1,
-    name: `Asset ${i + 1}`,
-    size: `${(Math.random() * 200 + 50).toFixed(1)}MB`,
-    date: `2023-${Math.floor(Math.random() * 12 + 1)}-${Math.floor(Math.random() * 28 + 1)}`,
-  }));
-
-  // Estado para filtros y paginación
+  const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 8;
 
-  // Filtrar y buscar assets
-  const filteredAssets = assets.filter((asset) =>
-    (filter === "All" || asset.name.toLowerCase().includes(filter.toLowerCase())) &&
-    asset.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const location = useLocation();
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const filtroURL = params.get("filter");
+    const searchURL = params.get("search");
+    if (filtroURL) setFilter(filtroURL);
+    if (searchURL) setSearch(searchURL);
+  }, [location.search]);
+
+  useEffect(() => {
+    fetch("http://localhost:5050/asset")
+      .then((res) => res.json())
+      .then((data) => setAssets(data))
+      .catch(() => setAssets([]));
+  }, []);
+
+  // Filtrar por categoría y búsqueda
+  const filteredAssets = assets.filter((asset) => {
+    const matchesCategory =
+      filter === "All" || (asset.categoria && asset.categoria.toLowerCase() === filter.toLowerCase());
+    const matchesSearch =
+      asset.titulo && asset.titulo.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   // Paginación
   const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
@@ -31,12 +43,12 @@ function ResultadoBusqueda() {
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
-    setCurrentPage(1); // Reiniciar a la primera página al cambiar el filtro
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    setCurrentPage(1); // Reiniciar a la primera página al buscar
+    setCurrentPage(1);
   };
 
   return (
@@ -87,14 +99,21 @@ function ResultadoBusqueda() {
       </div>
       <div className="assets-grid">
         {paginatedAssets.map((asset) => (
-          <div key={asset.id} className="asset-card">
+          <div key={asset._id.$oid || asset._id} className="asset-card">
             <div className="asset-thumbnail">
-              <input type="checkbox" />
+              <img
+                src={
+                  asset.imagen
+                    ? `http://localhost:5050/uploads/${asset.imagen}`
+                    : "/images/placeholder.png"
+                }
+                alt={asset.titulo}
+                style={{ width: "100%", height: 120, objectFit: "cover", borderRadius: 8 }}
+              />
             </div>
             <div className="asset-info">
-              <h3>{asset.name}</h3>
-              <p>{asset.size}</p>
-              <p>{asset.date}</p>
+              <h3>{asset.titulo}</h3>
+              <p className="asset-category">{asset.categoria}</p>
             </div>
           </div>
         ))}
@@ -116,7 +135,7 @@ function ResultadoBusqueda() {
           </button>
         ))}
         <button
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages || totalPages === 0}
           onClick={() => setCurrentPage((prev) => prev + 1)}
         >
           Siguiente
