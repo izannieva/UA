@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import "../styles/StyleNavbar.css";
+import "../styles/styleNavbar.css";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
