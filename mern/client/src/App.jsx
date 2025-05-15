@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import AssetPage from "./pages/AssetPage";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
+import MisAssets from "./pages/MisAssets";
 import Perfil from "./pages/Perfil";
 import RegisterPage from "./pages/RegisterPage";
 import ResultadoBusqueda from "./pages/ResultadoBusqueda";
 import UploadAssetPage from "./pages/UploadAssetPage";
-import AssetPage from "./pages/AssetPage";
-
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -30,6 +30,7 @@ function App() {
         <Route path="/busqueda" element={<ResultadoBusqueda />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/asset" element={<AssetPage />} />
+        <Route path="/mis-assets" element={<MisAssets />} />
       </Routes>
     </>
   );
