@@ -1,8 +1,8 @@
 // src/components/Navbar.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
-import "../styles/StyleNavbar.css";
+import "../styles/styleNavbar.css";
 
 function Navbar({ isAuthenticated, setIsAuthenticated }) {
   const navigate = useNavigate();
@@ -57,10 +57,10 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
         ) : (
           <>
             <Link to="/upload-asset" className="button">Subir Asset</Link>
-            <Link to="/perfil" className="button" title="Ver Perfil">
+            <Link to="/perfil" className="button">
               <FaUserCircle size={22} />
             </Link>
-            <button onClick={handleLogout} className="button" title="Cerrar Sesión">
+            <button onClick={handleLogout} className="button">
               <FaSignOutAlt size={20} />
             </button>
           </>

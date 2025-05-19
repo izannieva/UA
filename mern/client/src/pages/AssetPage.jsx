@@ -1,5 +1,5 @@
 import "../styles/styleAsset.css";
-import assetImage from "../assets/asset-preview.jpg"; // usa tu imagen aquí
+import assetImage from "../assets/asset-preview.jpg";
 
 function AssetPage() {
     return (
@@ -63,14 +63,71 @@ function AssetPage() {
                     </div>
                 </div>
             </div>
+
             <div className="asset-description">
-                <h2>Product Description</h2>
+                <h2>Descripción del producto</h2>
                 <p>
-                    This asset pack brings to life a detailed ancient Middle Eastern market, ideal for creating immersive environments in games and simulations.
-                    Featuring handcrafted models, realistic textures, and a wide variety of props such as carpets, pottery, fruits, and market stalls, it's perfect for
-                    historical or fantasy settings. Optimized for modern engines and compatible with Unreal Engine.
+                    Este paquete de assets recrea un mercado detallado del Medio Oriente antiguo, ideal para crear entornos inmersivos en juegos y simulaciones.
+                    Incluye modelos artesanales, texturas realistas y una amplia variedad de props como alfombras, cerámica, frutas y puestos de mercado.
+                    Optimizado para motores modernos y compatible con Unreal Engine.
                 </p>
             </div>
+
+            {/* Carrusel de otros assets */}
+            <div className="related-assets-section">
+                <h2>Más assets del creador</h2>
+                <div className="carousel-container">
+                    <div className="carousel-item">
+                        <img src={assetImage} alt="Misión Minerva" />
+                        <div className="item-info">
+                            <div className="item-title">Misión en Minerva</div>
+                            <div className="item-sub">KitBash3D · ⭐ 4.3 (64)</div>
+                            <div className="item-price">From Free</div>
+                        </div>
+                    </div>
+                    <div className="carousel-item">
+                        <img src={assetImage} alt="Atlantis" />
+                        <div className="item-info">
+                            <div className="item-title">Atlantis</div>
+                            <div className="item-sub">KitBash3D · ⭐ 4.9</div>
+                            <div className="item-price">From $199.99</div>
+                        </div>
+                    </div>
+                    {/* Repite más items si quieres */}
+                </div>
+            </div>
+
+            {/* Sección de comentarios */}
+            <div className="comments-section">
+                <h3>COMENTARIOS (1)</h3>
+
+                <div className="comment-input">
+                    <div className="user-icon">
+                        <i className="fa fa-user-circle" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Leave a comment, share your feedback. Don't be shy ;)"
+                    />
+                </div>
+
+                <div className="comment">
+                    <div className="user-icon">
+                        <i className="fa fa-user-circle" />
+                    </div>
+                    <div className="comment-content">
+                        <div className="username">
+                            <a href="#">3dg21</a> <span className="handle">@3dg21</span>
+                        </div>
+                        <div className="timestamp">a day ago</div>
+                        <div className="comment-text">
+                            nice, but there's a sharp edge near the bottom
+                        </div>
+                        <div className="reply">Reply</div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 }
