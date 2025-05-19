@@ -1,31 +1,62 @@
 import "../styles/styleAsset.css";
-import assetImage from "../assets/asset-preview.jpg";
+import { Link } from "react-router-dom";
+
+import { useParams } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
 
 function AssetPage() {
+
+  const { id } = useParams(); // <-- El ID dinámico de la URL
+  const [asset, setAsset] = useState(null);
+  const [assets, setAssets] = useState([]);
+
+  useEffect(() => {
+    fetch(`http://localhost:5050/asset/${id}`)
+      .then((res) => res.json())
+      .then((data) => setAsset(data))
+      .catch((err) => console.error("Error al cargar el asset:", err));
+  }, [id]);
+
+  useEffect(() => {
+    fetch("http://localhost:5050/asset")
+      .then((res) => res.json())
+      .then((data) => setAssets(data))
+      .catch(() => setAssets([]));
+  }, []);
+
+  const randomAssets = useMemo(() => {
+    if (!assets.length || !asset) return [];
+    const filtered = assets.filter((a) => a._id !== asset._id);
+    return filtered.sort(() => 0.5 - Math.random()).slice(0, 5);
+  }, [assets, asset]);
+
+  if (!asset) return <p>Cargando...</p>;
+
     return (
         <div className="asset-page">
             <div className="asset-main">
                 <div className="asset-image-section">
-                    <img src={assetImage} alt="Asset preview" className="main-image" />
+                    <img src={`http://localhost:5050/uploads/${asset.imagen}`} alt={asset.titulo} className="main-image" /> 
                     <div className="thumbnail-row">
-                        <img src={assetImage} className="thumbnail" alt="thumb" />
-                        <img src={assetImage} className="thumbnail" alt="thumb" />
-                        <img src={assetImage} className="thumbnail" alt="thumb" />
+                        <img src={`http://localhost:5050/uploads/${asset.imagen}`} alt={asset.titulo} className="thumbnail"/>
+                        <img src={`http://localhost:5050/uploads/${asset.imagen}`} alt={asset.titulo} className="thumbnail"/>
+                        <img src={`http://localhost:5050/uploads/${asset.imagen}`} alt={asset.titulo} className="thumbnail"/>
                     </div>
                 </div>
 
                 <div className="asset-info-section">
-                    <h1 className="asset-title">Asset3D - Nombre</h1>
+                    <h1 className="asset-title">{asset.titulo}</h1>
                     <div className="author-section">
                         <i className="fa fa-user-circle author-icon" />
-                        <span className="author-name">Stamiz</span>
+                        <span className="author-name">{asset.autorId}</span>
                     </div>
 
                     <div className="tags">
-                        <span className="tag">Modelo3D</span>
-                        <span className="tag">WW - 3</span>
-                        <span className="tag">Pack</span>
+                        {asset.tags?.map((tag, index) => (
+                            <span className="tag" key={index}>{tag}</span>
+                        ))}
                     </div>
+
 
                     <div className="details">
                         <div className="rating">
@@ -33,15 +64,21 @@ function AssetPage() {
                         </div>
                         <div className="detail-row">
                             <span className="label">Fecha</span>
-                            <span className="value">1 de Mayo de 2012</span>
+                            <span className="value">
+                                {new Date(asset.fechaSubida).toLocaleDateString("es-ES", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })}
+                            </span>
                         </div>
                         <div className="detail-row">
                             <span className="label">Licencia</span>
                             <span className="value">Estándar</span>
                         </div>
                         <div className="detail-row">
-                            <span className="label">Edad media</span>
-                            <span className="value">Madura</span>
+                            <span className="label">Categoria</span>
+                            <span className="value">{asset.categoria}</span>
                         </div>
                         <div className="detail-row">
                             <span className="label">Permite IA</span>
@@ -67,33 +104,35 @@ function AssetPage() {
             <div className="asset-description">
                 <h2>Descripción del producto</h2>
                 <p>
-                    Este paquete de assets recrea un mercado detallado del Medio Oriente antiguo, ideal para crear entornos inmersivos en juegos y simulaciones.
-                    Incluye modelos artesanales, texturas realistas y una amplia variedad de props como alfombras, cerámica, frutas y puestos de mercado.
-                    Optimizado para motores modernos y compatible con Unreal Engine.
+                    {asset.descripcion}
                 </p>
             </div>
 
             {/* Carrusel de otros assets */}
             <div className="related-assets-section">
-                <h2>Más assets del creador</h2>
+                <h2>Más assets</h2>
                 <div className="carousel-container">
-                    <div className="carousel-item">
-                        <img src={assetImage} alt="Misión Minerva" />
-                        <div className="item-info">
-                            <div className="item-title">Misión en Minerva</div>
-                            <div className="item-sub">KitBash3D · ⭐ 4.3 (64)</div>
-                            <div className="item-price">From Free</div>
+                {randomAssets.map((a) => (
+                    <Link
+                        to={`/asset/${a._id}`}
+                        key={a._id}
+                        className="asset-card-link"
+                    >
+                        <div className="asset-card">
+                        <img
+                            src={
+                            a.imagen
+                                ? `http://localhost:5050/uploads/${a.imagen}`
+                                : "/images/placeholder.png"
+                            }
+                            alt={a.titulo}
+                            className="asset-image"
+                        />
+                        <h4 className="asset-title">{a.titulo}</h4>
+                        <p className="asset-category">{a.categoria}</p>
                         </div>
-                    </div>
-                    <div className="carousel-item">
-                        <img src={assetImage} alt="Atlantis" />
-                        <div className="item-info">
-                            <div className="item-title">Atlantis</div>
-                            <div className="item-sub">KitBash3D · ⭐ 4.9</div>
-                            <div className="item-price">From $199.99</div>
-                        </div>
-                    </div>
-                    {/* Repite más items si quieres */}
+                    </Link>
+                ))}
                 </div>
             </div>
 
