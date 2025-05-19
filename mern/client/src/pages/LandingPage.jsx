@@ -49,19 +49,25 @@ function LandingPage() {
           <h2>Assets Destacados</h2>
           <div className="assets-grid">
             {randomAssets.map((asset) => (
-              <div className="asset-card" key={asset._id.$oid || asset._id}>
-                <img
-                  src={
-                    asset.imagen
-                      ? `http://localhost:5050/uploads/${asset.imagen}`
-                      : "/images/placeholder.png"
-                  }
-                  alt={asset.titulo}
-                  className="asset-image"
-                />
-                <h4 className="asset-title">{asset.titulo}</h4>
-                <p className="asset-category">{asset.categoria}</p>
-              </div>
+              <Link
+              to={`/asset/${asset._id.$oid || asset._id}`}
+              key={asset._id.$oid || asset._id}
+              className="asset-card-link"
+              >
+                <div className="asset-card" key={asset._id.$oid || asset._id}>
+                  <img
+                    src={
+                      asset.imagen
+                        ? `http://localhost:5050/uploads/${asset.imagen}`
+                        : "/images/placeholder.png"
+                    }
+                    alt={asset.titulo}
+                    className="asset-image"
+                  />
+                  <h4 className="asset-title">{asset.titulo}</h4>
+                  <p className="asset-category">{asset.categoria}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </section>

@@ -29,7 +29,7 @@ function App() {
         <Route path="/upload-asset" element={<UploadAssetPage />} />
         <Route path="/busqueda" element={<ResultadoBusqueda />} />
         <Route path="/perfil" element={<Perfil />} />
-        <Route path="/asset" element={<AssetPage />} />
+        <Route path="/asset/:id" element={<AssetPage />} />
         <Route path="/mis-assets" element={<MisAssets />} />
       </Routes>
     </>
