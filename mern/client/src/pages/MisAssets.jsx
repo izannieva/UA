@@ -41,21 +41,31 @@ function MisAssets() {
     <div className="perfil-container">
       <SidebarPerfil userEmail={userData.correo} />
       <main className="perfil-main">
-        <section className="perfil-info">
-          <h2>Mis Assets</h2>
-          {assets.length === 0 ? (
-            <p>No has subido ningún asset aún.</p>
-          ) : (
-            <ul>
-              {assets.map((asset) => (
-                <li key={asset._id}>
-                  <strong>{asset.titulo}</strong> - {asset.fechaSubida}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      </main>
+      <section className="perfil-info">
+        <h2>Mis Assets</h2>
+        {assets.length === 0 ? (
+          <p>No has subido ningún asset aún.</p>
+        ) : (
+          <div className="assets-grid">
+            {assets.map((asset) => (
+              <div className="asset-card" key={asset._id}>
+                <img
+                  src={
+                    asset.imagen
+                      ? `http://localhost:5050/uploads/${asset.imagen}`
+                      : "/images/placeholder.png"
+                  }
+                  alt={asset.titulo}
+                  className="asset-image"
+                />
+                <h4 className="asset-title">{asset.titulo}</h4>
+                <p className="asset-category">{asset.categoria}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+</main>
     </div>
   );
 }

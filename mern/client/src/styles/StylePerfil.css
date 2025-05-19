@@ -8,8 +8,10 @@ body {
 }
 
 
+
 /* Perfil Container */
 .perfil-container {
+  background-color: #18181b;
   display: flex;
   gap: 20px;
   padding: 40px 20px;
@@ -120,7 +122,7 @@ body {
 .perfil-main {
   flex: 1;
   padding: 32px;
-  background-color: #232329;
+  background-color: #18181b;
   border-radius: 12px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
