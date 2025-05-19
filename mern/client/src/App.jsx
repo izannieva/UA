@@ -9,15 +9,37 @@ import Perfil from "./pages/Perfil";
 import RegisterPage from "./pages/RegisterPage";
 import ResultadoBusqueda from "./pages/ResultadoBusqueda";
 import UploadAssetPage from "./pages/UploadAssetPage";
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Comprobar si el token existe al cargar la app
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(null); // null = aún no sabemos
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
+    if (!token) {
+      setIsAuthenticated(false);
+      return;
+    }
+    // Validar token con el backend
+    fetch("http://localhost:5050/user/perfil", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(res => {
+        if (res.ok) setIsAuthenticated(true);
+        else {
+          localStorage.removeItem("token");
+          localStorage.removeItem("userEmail");
+          setIsAuthenticated(false);
+        }
+      })
+      .catch(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userEmail");
+        setIsAuthenticated(false);
+      });
   }, []);
 
+  // Mientras se valida el token, no renderices nada (o muestra un loader)
+  if (isAuthenticated === null) return null;
 
   return (
     <>
