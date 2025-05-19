@@ -1,6 +1,6 @@
 // components/SidebarPerfil.jsx
 import { Link, useLocation } from "react-router-dom";
-import "../styles/styleSidebarPerfil.css"; // puedes mover los estilos aquí si lo prefieres
+import "../styles/styleSidebarPerfil.css";
 
 function SidebarPerfil({ userEmail }) {
   const location = useLocation();
