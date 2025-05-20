@@ -88,72 +88,538 @@ h1 {
   transform: scale(1.1); /* Efecto de hover */
 }
 
-/* Assets grid */
+/* Professional Search Page Styling */
+
+.search-container {
+  display: flex;
+  background: #121216;
+  color: #fff;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.search-sidebar {
+  width: 240px;
+  padding: 30px 20px;
+  background: linear-gradient(to bottom, #1e1e24, #17171d);
+  border-right: 1px solid #27272a;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.search-sidebar h2 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #fff;
+  font-weight: 600;
+}
+
+.search-sidebar h3 {
+  font-size: 1rem;
+  margin: 20px 0 10px;
+  color: #d4d4d8;
+}
+
+.filter-title {
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  color: #fff;
+  font-weight: 600;
+  text-align: center;
+  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+  letter-spacing: 0.5px;
+}
+
+.category-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.category-button {
+  background: rgba(26, 26, 31, 0.6);
+  color: #a1a1aa;
+  text-align: left;
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+}
+
+.category-button:hover {
+  background: rgba(39, 39, 42, 0.8);
+  color: #fff;
+  border-color: rgba(167, 139, 250, 0.3);
+  transform: translateY(-2px);
+}
+
+.category-button.active {
+  background: linear-gradient(135deg, #3b2c85, #553c9a);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 5px 10px rgba(85, 60, 154, 0.3);
+  border-color: #a78bfa;
+}
+
+.category-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  min-width: 24px;
+  color: #a78bfa;
+}
+
+.category-button.active .category-icon {
+  color: white;
+}
+
+.category-name {
+  flex: 1;
+}
+
+/* Animación para los botones de categorías */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(167, 139, 250, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
+}
+
+.category-button.active {
+  animation: pulse 2s infinite;
+}
+
+/* Efecto de desplazamiento suave para la barra lateral */
+.search-sidebar {
+  transition: all 0.3s ease;
+}
+
+/* Main Content */
+.search-content {
+  flex: 1;
+  padding: 30px;
+}
+
+.search-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline; /* Mejor alineación vertical */
+  gap: 15px;
+  margin-bottom: 30px;
+  position: relative; /* Para posicionamiento adecuado */
+  padding-bottom: 15px;
+  border-bottom: 1px solid #27272a;
+}
+
+/* Contenedor para título y contador */
+.title-container {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.search-header h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0;
+  margin-right: 10px; /* Espacio antes del contador */
+}
+
+/* Alinear correctamente el contador de resultados */
+.search-count {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 24px; /* Altura específica para alineación */
+}
+
+.search-form {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+  max-width: 400px;
+  flex-grow: 1;
+  align-items: center; /* Alineación vertical */
+}
+
+.search-input-container {
+  position: relative;
+  flex-grow: 1;
+  height: 38px; /* Altura fija para consistencia */
+}
+
+/* Ajuste del ícono de búsqueda */
+.search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a1a1aa;
+  font-size: 16px; /* Tamaño ajustado */
+}
+
+.search-input {
+  background: #1a1a1f;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 8px 8px 8px 36px; /* Reducido ligeramente */
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  border-color: #a78bfa;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+}
+
+/* Ajustes al botón de búsqueda - más pequeño */
+.search-submit {
+  background: #a78bfa;
+  color: #121216;
+  border: none;
+  border-radius: 6px; /* Más pequeño */
+  padding: 6px 12px; /* Reducido */
+  font-size: 0.85rem; /* Texto más pequeño */
+  font-weight: 500;
+  cursor: pointer;
+  height: 38px; /* Altura fija para alineación con el input */
+  min-width: 70px; /* Ancho mínimo para asegurar que quepa el texto */
+}
+
+.search-submit:hover {
+  background: #b89dff;
+}
+
+/* Asset Grid */
 .assets-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
 }
 
 .asset-card {
-  background: #232329;
-  border-radius: 8px;
-  padding: 16px;
+  background: #1a1a1f;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s, box-shadow 0.3s;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transform-origin: center bottom;
+  border: 1px solid transparent;
 }
 
 .asset-card:hover {
-  transform: translateY(-4px); /* Efecto de hover */
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: #a78bfa;
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
-.asset-thumbnail input {
-  margin-bottom: 8px;
+.asset-image-container {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  background: #0c0c0f; /* Darker background for images */
 }
 
-.asset-info h3 {
+.asset-image-container:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.7) 100%);
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.asset-card:hover .asset-image-container:before {
+  opacity: 1;
+}
+
+.asset-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #0f0f13;
+}
+
+.asset-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.asset-card:hover .asset-overlay {
+  transform: translateY(-5px);
+}
+
+.asset-title {
+  margin: 0;
   font-size: 1rem;
-  margin: 0;
+  font-weight: 500;
+  color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.asset-info p {
-  font-size: 0.9rem;
-  margin: 0;
-  color: #aaa;
+.asset-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.asset-creator {
+  font-size: 0.85rem;
+  color: #a1a1aa;
+}
+
+.asset-meta {
+  display: flex;
+  justify-content: space-between;
+}
+
+.asset-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.star-icon {
+  fill: #f59e0b;
+}
+
+.asset-price {
+  font-weight: 600;
+  color: #10b981;
 }
 
 /* Pagination */
 .pagination {
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-top: 40px;
   gap: 8px;
-  margin-top: 24px;
+  padding: 15px 0;
+  position: relative;
+  background-color: #121216;
+  width: 100%;
+  border-top: 1px solid #27272a;
+  z-index: 10;
+  margin-bottom: 20px;
 }
 
-.pagination button {
-  background: #333;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 16px;
+.pagination-button {
+  background: #1a1a1f;
+  color: #a1a1aa;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition: all 0.2s;
 }
 
-.pagination button.active {
+.pagination-button:hover:not(:disabled) {
+  background: #27272a;
+  color: #fff;
+}
+
+.pagination-button.active {
   background: #a78bfa;
-  color: #18181b;
+  color: #121216;
+  border-color: #a78bfa;
 }
 
-.pagination button:hover {
-  transform: scale(1.1); /* Efecto de hover */
-}
-
-.pagination button:disabled {
-  background: #444;
+.pagination-button:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.pagination-ellipsis {
+  color: #a1a1aa;
+}
+
+/* Loading Skeleton Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #1a1a1f 25%, #27272a 50%, #1a1a1f 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 12px;
+}
+
+.skeleton-image {
+  height: 160px;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+/* Empty State */
+.no-results {
+  text-align: center;
+  padding: 40px 0;
+  color: #a1a1aa;
+}
+
+.no-results img {
+  width: 120px;
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.no-results h3 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: #d4d4d8;
+}
+
+/* Add at the end of your CSS file */
+
+/* Fix for navbar overlap */
+.search-container-with-navbar {
+  padding-top: 70px; /* Adjust this value based on your navbar height */
+  padding-bottom: 30px; /* Add bottom padding to prevent content from being cut off */
+}
+
+/* Make sure main content has proper spacing */
+.search-content {
+  min-height: calc(100vh - 70px); /* Adjust based on navbar height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Push pagination to bottom and ensure it's visible */
+.assets-grid {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+/* Improve pagination visibility and positioning */
+.pagination {
+  margin: 40px 0 20px;
+  position: sticky;
+  bottom: 0;
+  background: rgba(18, 18, 22, 0.8); /* Semi-transparent background */
+  backdrop-filter: blur(5px); /* Blur effect for modern browsers */
+  padding: 15px 0;
+  border-radius: 8px;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+/* Make pagination buttons more visible */
+.pagination-button {
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+/* Add some breathing room to the bottom of the page */
+@media (min-height: 800px) {
+  .search-container {
+    min-height: calc(100vh - 80px); /* Leave space for bottom margin */
+    margin-bottom: 80px;
+  }
+}
+
+/* Responsive fixes for mobile */
+@media (max-width: 768px) {
+  .search-container-with-navbar {
+    padding-top: 60px; /* Slightly smaller on mobile */
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Make sure last row of assets isn't cut off on mobile */
+  .assets-grid {
+    margin-bottom: 30px;
+  }
+
+  .search-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .search-form {
+    width: 100%;
+    margin: 10px 0 0 0;
+  }
+  
+  .search-count {
+    margin-top: -5px; /* Ajuste fino en móvil */
+  }
+  
+  .pagination {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 5px;
+  }
+}
+
+/* Make sure all assets in the grid have consistent height */
+.asset-card {
+  height: 100%;
+  max-height: 330px; /* Set consistent height */
 }

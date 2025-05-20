@@ -124,10 +124,25 @@ function LandingPage() {
                           alt={asset.titulo}
                           className="asset-image"
                         />
+                        {/* Overlay title on the image */}
+                        <div className="asset-title-overlay">
+                          <h4 className="asset-title">{asset.titulo || "Sin título"}</h4>
+                        </div>
                       </div>
                       <div className="asset-info">
-                        <h4 className="asset-title">{asset.titulo || "Sin título"}</h4>
-                        <p className="asset-category">{asset.categoria || "Sin categoría"}</p>
+                        <div className="asset-creator">
+                          {asset.usuario?.nombre || "Usuario"}
+                        </div>
+                        <div className="asset-rating">
+                          <span className="asset-rating-stars">★★★★☆</span>
+                          <span className="asset-rating-count">{asset.downloads || 0}</span>
+                        </div>
+                        {asset.precio === 0 && (
+                          <div className="asset-price free">Free</div>
+                        )}
+                        {asset.precio > 0 && (
+                          <div className="asset-price">${asset.precio}</div>
+                        )}
                       </div>
                     </Link>
                   ))}
