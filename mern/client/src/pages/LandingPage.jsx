@@ -110,7 +110,7 @@ function LandingPage() {
                 <div className="assets-grid-compact">
                   {randomAssets.map((asset) => (
                     <Link 
-                      to={`/asset?id=${asset._id.$oid || asset._id}`} 
+                      to={`/asset/${asset._id.$oid || asset._id}`} 
                       className="asset-card" 
                       key={asset._id.$oid || asset._id}
                     >
