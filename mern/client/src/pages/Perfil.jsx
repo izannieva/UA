@@ -66,7 +66,7 @@ function Perfil() {
         Object.entries(formData).filter(([_, v]) => v != null && v !== "")
       );
 
-      const res = await fetch("http://localhost:5050/user/perfil", {
+      const res = await fetch(`http://localhost:5050/user/${userData._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -78,9 +78,12 @@ function Perfil() {
       const data = await res.json();
 
       if (!res.ok) {
+        
         setError(data.error || "Error actualizando perfil");
         setLoading(false);
         return;
+      }else{
+        console.log("Perfil actualizado correctamente",data);
       }
 
       setUserData(formData);
