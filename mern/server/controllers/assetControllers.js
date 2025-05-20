@@ -1,4 +1,4 @@
-import { createAsset, deleteAsset, getAllAssets, getAssetById } from "../models/assetModel.js";
+import { createAsset, deleteAsset, getAllAssets, getAssetById, updateAsset } from "../models/assetModel.js";
 
 export const getAssets = async (req, res) => {
     try {
@@ -59,7 +59,7 @@ export const addAsset = async (req, res) => {
   }
 };
 
-// Obtener usuario por ID
+// Obtener asset por ID
 export const getAsset = async (req, res) => {
     try {
         const { id } = req.params;
@@ -76,7 +76,7 @@ export const getAsset = async (req, res) => {
 export const borrarAsset = async (req, res) => {
     try {
         const { id } = req.params;
-        const { id: userId } = req.user; // ID del usuario autenticado desde el token
+        const { id: userId } = req.user; // ID del asset autenticado desde el token
 
         // Verificar si el asset existe
         const asset = await getAssetById(id);
@@ -84,7 +84,7 @@ export const borrarAsset = async (req, res) => {
             return res.status(404).json({ error: "Asset no encontrado" });
         }
 
-        // Verificar si el usuario autenticado es el autor del asset
+        // Verificar si el asset autenticado es el autor del asset
         if (asset.autorId !== userId) {
             return res.status(403).json({ error: "No tienes permiso para eliminar este asset" });
         }
@@ -98,5 +98,34 @@ export const borrarAsset = async (req, res) => {
         res.json({ message: "Asset eliminado correctamente" });
     } catch (error) {
         res.status(500).json({ error: "Error al eliminar asset" });
+    }
+};
+
+export const editAsset = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { id: userId } = req.user;
+        const updateData = req.body;
+
+        // Verifica si el asset existe
+        const asset = await getAssetById(id);
+        if (!asset) {
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+
+        // Solo el autor puede editar
+        if (asset.autorId !== userId) {
+            return res.status(403).json({ error: "No tienes permiso para editar este asset" });
+        }
+
+        // Actualiza el asset
+        const result = await updateAsset(id, updateData);
+        if (result.modifiedCount === 0) {
+            return res.status(400).json({ error: "No se pudo actualizar el asset" });
+        }
+
+        res.json({ message: "Asset actualizado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "Error al editar asset" });
     }
 };

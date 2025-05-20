@@ -18,3 +18,10 @@ export const getAssetById = async (id) => {
 export const deleteAsset = async (id) => {
     return await db.collection("Asset").deleteOne({ _id: new ObjectId(id) });
 };
+export const updateAsset = async (id, updateData) => {
+    const db = client.db("UA-bdd");
+    return await db.collection("Asset").updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateData }
+    );
+};

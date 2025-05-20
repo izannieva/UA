@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { addAsset, borrarAsset, getAsset, getAssets } from "../controllers/assetControllers.js";
+import { addAsset, borrarAsset, editAsset, getAsset, getAssets } from "../controllers/assetControllers.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -18,5 +18,6 @@ router.post(
 );
 router.get("/:id", getAsset);
 router.delete("/:id", verifyToken, borrarAsset);
+router.put("/:id", verifyToken, editAsset); 
 
 export default router;
