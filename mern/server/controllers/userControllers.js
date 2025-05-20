@@ -95,7 +95,10 @@ export const editUser = async (req, res) => {
     try {
         const { id } = req.params;
         const updatedData = req.body;
-
+        // Verifica que el usuario autenticado es el mismo
+        if (req.user && req.user.id !== id) {
+            return res.status(403).json({ error: "No tienes permiso para editar este usuario" });
+        }
         const result = await updateUser(id, updatedData);
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: "Usuario no encontrado" });

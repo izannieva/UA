@@ -8,7 +8,14 @@ function MisAssets() {
   const [assets, setAssets] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editAsset, setEditAsset] = useState(null);
-  const [editForm, setEditForm] = useState({ titulo: "", categoria: "" });
+  const [editForm, setEditForm] = useState({
+    titulo: "",
+    categoria: "",
+    descripcion: "",
+    tags: "",
+    imagen: null,
+    modelo: null,
+});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,34 +62,63 @@ function MisAssets() {
 
   // Abrir modal de edición
   const handleEdit = (asset) => {
-    setEditAsset(asset);
-    setEditForm({ titulo: asset.titulo, categoria: asset.categoria });
-    setShowModal(true);
-  };
+  setEditAsset(asset);
+  setEditForm({
+    titulo: asset.titulo || "",
+    categoria: asset.categoria || "",
+    descripcion: asset.descripcion || "",
+    tags: Array.isArray(asset.tags) ? asset.tags.join(", ") : (asset.tags || ""),
+    imagen: null,
+    modelo: null,
+  });
+  setShowModal(true);
+};
 
   // Guardar cambios
   const handleSaveEdit = async () => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:5050/asset/${editAsset._id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(editForm),
-    });
-    if (res.ok) {
-      setAssets((prev) =>
-        prev.map((a) =>
-          a._id === editAsset._id ? { ...a, ...editForm } : a
-        )
-      );
-      setShowModal(false);
-      setEditAsset(null);
-    } else {
-      alert("Error al editar el asset");
-    }
-  };
+  const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("titulo", editForm.titulo);
+  formData.append("categoria", editForm.categoria);
+  formData.append("descripcion", editForm.descripcion);
+  formData.append("tags", JSON.stringify(editForm.tags.split(",").map(t => t.trim()).filter(Boolean)));
+  if (editForm.imagen) formData.append("imagen", editForm.imagen);
+  if (editForm.modelo) formData.append("modelo", editForm.modelo);
+
+  const res = await fetch(`http://localhost:5050/asset/${editAsset._id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    console.log(data.message);
+    // Actualiza el asset en el estado local
+    setAssets(prev =>
+      prev.map(a =>
+        a._id === editAsset._id
+          ? {
+              ...a,
+              titulo: editForm.titulo,
+              categoria: editForm.categoria,
+              descripcion: editForm.descripcion,
+              tags: editForm.tags.split(",").map(t => t.trim()).filter(Boolean),
+              // Si has subido nueva imagen/modelo, deberías actualizar aquí también
+              imagen: editForm.imagen ? editForm.imagen.name : a.imagen,
+              modelo: editForm.modelo ? editForm.modelo.name : a.modelo,
+            }
+          : a
+      )
+    );
+    setShowModal(false);
+    setEditAsset(null);
+  } else {
+    alert("Error al editar el asset");
+  }
+};
 
   if (!userData) return <p style={{ color: "white" }}>Cargando assets...</p>;
 
@@ -97,7 +133,7 @@ function MisAssets() {
           ) : (
             <div className="assets-grid">
               {assets.map((asset) => (
-                <div className="asset-card" key={asset._id}>
+                <div className="asset-card2" key={asset._id}>
                   <img
                     src={
                       asset.imagen
@@ -169,6 +205,36 @@ function MisAssets() {
               value={editForm.categoria}
               onChange={e => setEditForm(f => ({ ...f, categoria: e.target.value }))}
               style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
+            />
+            <label>Descripción</label>
+            <textarea
+              value={editForm.descripcion}
+              onChange={e => setEditForm(f => ({ ...f, descripcion: e.target.value }))}
+              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
+            />
+
+            <label>Tags (separados por coma)</label>
+            <input
+              type="text"
+              value={editForm.tags}
+              onChange={e => setEditForm(f => ({ ...f, tags: e.target.value }))}
+              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
+            />
+
+            <label>Imagen</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => setEditForm(f => ({ ...f, imagen: e.target.files[0] }))}
+              style={{ marginBottom: "12px" }}
+            />
+
+            <label>Modelo</label>
+            <input
+              type="file"
+              accept=".glb,.obj,.fbx"
+              onChange={e => setEditForm(f => ({ ...f, modelo: e.target.files[0] }))}
+              style={{ marginBottom: "12px" }}
             />
             <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
               <button
