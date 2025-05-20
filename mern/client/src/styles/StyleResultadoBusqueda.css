@@ -97,97 +97,92 @@ h1 {
   min-height: 100vh;
 }
 
-/* Sidebar */
-.search-sidebar {
+/* Estructura principal con scroll independiente */
+.rb-search-container {
+  display: flex;
+  background: #121216;
+  color: #fff;
+  height: 100vh; /* Altura fija */
+  overflow: hidden; /* Evita scroll en el contenedor principal */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.rb-search-container-with-navbar {
+  padding-top: 60px; /* Espacio para la navbar */
+}
+
+/* Sidebar fija */
+.rb-sidebar {
   width: 240px;
-  padding: 30px 20px;
+  height: 100%;
+  padding: 25px 20px;
   background: linear-gradient(to bottom, #1e1e24, #17171d);
   border-right: 1px solid #27272a;
   flex-shrink: 0;
-  position: relative;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Permite scroll independiente en la sidebar si es necesario */
+  z-index: 15;
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
 }
 
-.search-sidebar h2 {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #fff;
-  font-weight: 600;
-}
-
-.search-sidebar h3 {
-  font-size: 1rem;
-  margin: 20px 0 10px;
-  color: #d4d4d8;
-}
-
-.filter-title {
-  font-size: 1.3rem;
-  margin-bottom: 25px;
-  color: #fff;
-  font-weight: 600;
-  text-align: center;
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
-  letter-spacing: 0.5px;
-}
-
-.category-filters {
+/* Contenedor principal con layout flexbox */
+.rb-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+  height: 100%;
+  overflow: hidden; /* Evita scroll en el contenedor de contenido */
 }
 
-.category-button {
-  background: rgba(26, 26, 31, 0.6);
-  color: #a1a1aa;
-  text-align: left;
-  padding: 12px 15px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.3s;
+/* Header fijo */
+.rb-header {
+  padding: 16px 24px;
+  background: #121216;
+  border-bottom: 1px solid #27272a;
+  z-index: 10;
+  position: sticky;
+  top: 0;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  position: relative;
-  backdrop-filter: blur(5px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid transparent;
+  gap: 20px;
 }
 
-.category-button:hover {
-  background: rgba(39, 39, 42, 0.8);
-  color: #fff;
-  border-color: rgba(167, 139, 250, 0.3);
-  transform: translateY(-2px);
-}
-
-.category-button.active {
-  background: linear-gradient(135deg, #3b2c85, #553c9a);
-  color: #fff;
-  font-weight: 500;
-  box-shadow: 0 5px 10px rgba(85, 60, 154, 0.3);
-  border-color: #a78bfa;
-}
-
-.category-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  border-radius: 8px;
-  min-width: 24px;
-  color: #a78bfa;
-}
-
-.category-button.active .category-icon {
-  color: white;
-}
-
-.category-name {
+/* ÁREA CON SCROLL INDEPENDIENTE PARA ASSETS */
+.rb-assets-scroll-area {
   flex: 1;
+  overflow-y: auto; /* Habilita el scroll vertical solo en esta área */
+  padding: 25px;
+  height: calc(100% - 80px); /* Resta la altura aproximada del header */
+}
+
+/* Grid de assets */
+.rb-assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+  padding-bottom: 80px; /* Espacio para la paginación */
+}
+
+/* Paginación fija al final */
+.rb-pagination {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+  background: rgba(18, 18, 22, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(39, 39, 42, 0.5);
+  gap: 8px;
 }
 
 /* Animación para los botones de categorías */
@@ -197,19 +192,43 @@ h1 {
   100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
 }
 
-.category-button.active {
-  animation: pulse 2s infinite;
-}
-
-/* Efecto de desplazamiento suave para la barra lateral */
-.search-sidebar {
-  transition: all 0.3s ease;
+@keyframes rb-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(167, 139, 250, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); }
 }
 
 /* Main Content */
 .search-content {
   flex: 1;
   padding: 30px;
+}
+
+.rb-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header fijo */
+.rb-header {
+  padding: 16px 24px;
+  background: #121216;
+  border-bottom: 1px solid #27272a;
+  z-index: 10;
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.rb-title-container {
+  display: flex;
+  align-items: baseline;
 }
 
 .search-header {
@@ -248,6 +267,12 @@ h1 {
   height: 24px; /* Altura específica para alineación */
 }
 
+.rb-count {
+  color: #a1a1aa;
+  font-size: 0.9rem;
+  margin-left: 8px;
+}
+
 .search-form {
   margin-left: auto;
   display: flex;
@@ -257,10 +282,27 @@ h1 {
   align-items: center; /* Alineación vertical */
 }
 
+.rb-search-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 400px;
+  width: 100%;
+  margin-left: auto;
+}
+
 .search-input-container {
   position: relative;
   flex-grow: 1;
   height: 38px; /* Altura fija para consistencia */
+}
+
+.rb-search-input-container {
+  position: relative;
+  flex-grow: 1;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 /* Ajuste del ícono de búsqueda */
@@ -271,6 +313,16 @@ h1 {
   transform: translateY(-50%);
   color: #a1a1aa;
   font-size: 16px; /* Tamaño ajustado */
+}
+
+.rb-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a1a1aa;
+  font-size: 16px;
+  z-index: 2;
 }
 
 .search-input {
@@ -285,10 +337,27 @@ h1 {
   transition: all 0.3s;
 }
 
+.rb-search-input {
+  background: #1a1a1f;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 10px 10px 10px 42px;
+  color: #fff;
+  width: 100%;
+  height: 40px;
+  font-size: 0.95rem;
+}
+
 .search-input:focus {
   border-color: #a78bfa;
   outline: none;
   box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+}
+
+.rb-search-input:focus {
+  border-color: #a78bfa;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.2);
 }
 
 /* Ajustes al botón de búsqueda - más pequeño */
@@ -305,8 +374,122 @@ h1 {
   min-width: 70px; /* Ancho mínimo para asegurar que quepa el texto */
 }
 
+.rb-search-submit {
+  background: #0075ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  height: 40px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
 .search-submit:hover {
   background: #b89dff;
+}
+
+.rb-search-submit:hover {
+  background: #0062d6;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 117, 255, 0.3);
+}
+
+/* Nueva barra de búsqueda mejorada */
+.rb-finder-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 450px; /* Ajustado para mejor proporción */
+  width: 100%;
+  margin-left: auto;
+}
+
+.rb-finder-input-container {
+  position: relative;
+  flex-grow: 1;
+  height: 40px; /* Altura ajustada para coincidir con navbar */
+  border-radius: 8px; /* Mismo border-radius que navbar */
+  overflow: hidden;
+}
+
+.rb-finder-input {
+  background: #232329; /* Mismo color que navbar */
+  border: 1.5px solid #333;
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  font-size: 0.9rem; /* Mismo tamaño que navbar */
+  transition: border-color 0.3s ease;
+}
+
+.rb-finder-input::placeholder {
+  color: #aaa; /* Mismo color que navbar */
+}
+
+.rb-finder-input:focus {
+  border-color: #a78bfa; /* Mismo color que navbar */
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+}
+
+/* Botón de búsqueda con estilo consistente con navbar */
+.rb-finder-submit {
+  background: #a78bfa; /* Mismo color que navbar */
+  color: black; /* Texto negro igual que navbar */
+  border: none;
+  border-radius: 8px; /* Mismo que navbar */
+  padding: 8px 16px; /* Mismo padding que navbar */
+  height: 40px; /* Altura consistente */
+  min-width: unset;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.rb-finder-submit:hover {
+  background: #c4b5fd; /* Mismo hover que navbar */
+  transform: none; /* Eliminar transformación */
+  box-shadow: none; /* Eliminar sombra */
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .rb-finder-form {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .rb-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+  }
+  
+  .ua-search-container {
+    margin-top: 12px;
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Estilizar el icono de lupa igual que en navbar */
+.rb-finder-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  font-size: 1rem;
+  z-index: 2;
 }
 
 /* Asset Grid */
@@ -314,6 +497,13 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 20px;
+}
+
+.rb-assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+  padding-bottom: 80px;
 }
 
 .asset-card {
@@ -331,18 +521,48 @@ h1 {
   border: 1px solid transparent;
 }
 
+.rb-asset-card {
+  background: #1a1a1f;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .asset-card:hover {
   border-color: #a78bfa;
   transform: translateY(-5px) scale(1.01);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
+.rb-asset-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(167, 139, 250, 0.4);
+}
+
+/* Contenedor de imagen mejorado */
 .asset-image-container {
   position: relative;
   width: 100%;
   padding-top: 56.25%; /* 16:9 aspect ratio */
   overflow: hidden;
   background: #0c0c0f; /* Darker background for images */
+}
+
+.rb-asset-image-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 70%; /* Relación de aspecto consistente */
+  background: #0f0f13; 
+  overflow: hidden;
 }
 
 .asset-image-container:before {
@@ -370,21 +590,89 @@ h1 {
   height: 100%;
   object-fit: contain;
   background-color: #0f0f13;
+  transition: all 0.4s ease;
 }
 
-.asset-overlay {
+.rb-asset-image {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
-  right: 0;
-  padding: 15px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-  z-index: 2;
-  transition: transform 0.3s ease;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Para no cortar las imágenes */
+  background-color: #0f0f13;
+  transition: all 0.4s ease;
 }
 
-.asset-card:hover .asset-overlay {
-  transform: translateY(-5px);
+.asset-card:hover .rb-asset-image {
+  transform: scale(1.04);
+}
+
+/* Badge de tipo de asset */
+.asset-type {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  background: rgba(26, 26, 31, 0.8);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rb-asset-type {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 6px 10px;
+  background: rgba(26, 26, 31, 0.8);
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  z-index: 5;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.asset-type.type-3d {
+  background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.asset-type.type-f {
+  background: linear-gradient(135deg, #ec4899, #f43f5e);
+}
+
+.asset-type.type-h {
+  background: linear-gradient(135deg, #06b6d4, #0ea5e9);
+}
+
+.asset-type.type-as {
+  background: linear-gradient(135deg, #22c55e, #10b981);
+}
+
+/* Información del asset */
+.asset-info {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rb-asset-info {
+  padding: 16px;
+  background: linear-gradient(to bottom, rgba(26, 26, 31, 0.7), #1a1a1f);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .asset-title {
@@ -397,11 +685,15 @@ h1 {
   white-space: nowrap;
 }
 
-.asset-info {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.rb-asset-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .asset-creator {
@@ -409,26 +701,55 @@ h1 {
   color: #a1a1aa;
 }
 
-.asset-meta {
-  display: flex;
-  justify-content: space-between;
+.rb-asset-creator {
+  font-size: 0.85rem;
+  color: #a1a1aa;
 }
 
-.asset-rating {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #f59e0b;
+/* Overlay elegante */
+.asset-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.rb-asset-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 16px 16px;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 50%, transparent 100%);
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.asset-card:hover .asset-overlay {
+  transform: translateY(-5px);
+}
+
+.rb-asset-card:hover .rb-asset-overlay {
+  opacity: 1;
+}
+
+.asset-category {
+  display: inline-block;
+  background: rgba(167, 139, 250, 0.8);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   font-weight: 500;
-}
-
-.star-icon {
-  fill: #f59e0b;
-}
-
-.asset-price {
-  font-weight: 600;
-  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 8px;
+  backdrop-filter: blur(5px);
 }
 
 /* Pagination */
@@ -445,6 +766,24 @@ h1 {
   border-top: 1px solid #27272a;
   z-index: 10;
   margin-bottom: 20px;
+}
+
+.rb-pagination {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+  background: rgba(18, 18, 22, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+  margin-top: auto;
+  border-top: 1px solid rgba(39, 39, 42, 0.5);
+  gap: 8px;
 }
 
 .pagination-button {
@@ -464,6 +803,34 @@ h1 {
 }
 
 .pagination-button.active {
+  background: #a78bfa;
+  color: #121216;
+  border-color: #a78bfa;
+}
+
+.rb-pagination-button {
+  background: #1a1a1f;
+  color: #a1a1aa;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  padding: 8px 14px;
+  min-width: 40px;
+  height: 40px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.rb-pagination-button:hover:not(:disabled) {
+  background: #27272a;
+  color: #fff;
+}
+
+.rb-pagination-button.active {
   background: #a78bfa;
   color: #121216;
   border-color: #a78bfa;
@@ -616,10 +983,112 @@ h1 {
     gap: 6px;
     padding: 12px 5px;
   }
+  
+  .rb-search-container {
+    flex-direction: column;
+  }
+  
+  .rb-sidebar {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    padding: 15px;
+  }
+  
+  .rb-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .rb-search-form {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .rb-category-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
+  }
+  
+  .rb-assets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+  }
+  
+  .rb-pagination {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 5px;
+  }
+  
+  .rb-asset-image-container {
+    padding-bottom: 65%;
+  }
 }
 
-/* Make sure all assets in the grid have consistent height */
-.asset-card {
-  height: 100%;
-  max-height: 330px; /* Set consistent height */
+/* Estilos minimalistas para los botones de categoría */
+.ex-sidebar {
+  background: #18181b;
+  border-right: 1px solid #27272a;
+  padding: 30px 20px;
+}
+
+.ex-cat-title {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  margin-left: 0;
+}
+
+.ex-cat-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ex-cat-button {
+  background: transparent;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  border-radius: 0;
+  transition: color 0.2s ease;
+}
+
+.ex-cat-button:hover {
+  color: #a78bfa;
+}
+
+.ex-cat-button.active {
+  color: #a78bfa;
+}
+
+.ex-cat-icon {
+  color: #a78bfa; /* Iconos morados */
+  margin-right: 12px;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.ex-cat-name {
+  font-weight: 400;
+}
+
+/* Ajuste al fondo del sidebar */
+.ex-sidebar {
+  background: #18181b;
+  border-right: 1px solid #27272a;
+  padding: 30px 20px;
 }
