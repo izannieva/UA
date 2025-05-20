@@ -9,6 +9,10 @@ function AssetPage() {
   const { id } = useParams(); // <-- El ID dinámico de la URL
   const [asset, setAsset] = useState(null);
   const [assets, setAssets] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user")); // o sessionStorage
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+
 
   useEffect(() => {
     fetch(`http://localhost:5050/asset/${id}`)
@@ -29,6 +33,18 @@ function AssetPage() {
     const filtered = assets.filter((a) => a._id !== asset._id);
     return filtered.sort(() => 0.5 - Math.random()).slice(0, 5);
   }, [assets, asset]);
+
+  const handleDownload = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      // ✅ Aquí haces la descarga real
+      window.open(`http://localhost:5050/uploads/${asset.archivo}`, "_blank");
+    } else {
+      // ❌ Usuario no logueado, mostramos el modal
+      setShowLoginPopup(true);
+    }
+  };
+  
 
   if (!asset) return <p>Cargando...</p>;
 
@@ -91,7 +107,9 @@ function AssetPage() {
                     </div>
 
                     <div className="buttons">
-                        <button className="primary">Descargar ahora</button>
+                        <button className="primary" onClick={handleDownload}>
+                        Descargar ahora
+                        </button>
                         <button className="secondary">Guardar en "Assets"</button>
                         <div className="inline-buttons">
                             <button className="tertiary">Compartir</button>
@@ -166,6 +184,20 @@ function AssetPage() {
                     </div>
                 </div>
             </div>
+            {showLoginPopup && (
+                <div className="modal-backdrop">
+                    <div className="modal">
+                    <h3>Inicia sesión para descargar</h3>
+                    <p>Debes tener una cuenta para descargar este asset.</p>
+                    <Link to="/login">
+                        <button className="primary">Ir a iniciar sesión</button>
+                    </Link>
+                    <button className="secondary" onClick={() => setShowLoginPopup(false)}>
+                        Cancelar
+                    </button>
+                    </div>
+                </div>
+            )}
 
         </div>
     );
