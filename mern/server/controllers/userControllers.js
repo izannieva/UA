@@ -100,7 +100,7 @@ export const editUser = async (req, res) => {
         if (result.matchedCount === 0) {
             return res.status(404).json({ error: "Usuario no encontrado" });
         }
-        res.json({ message: "Usuario actualizado correctamente" });
+        res.json({ message: "Usuario actualizado correctamente",updatedData });
     } catch (error) {
         res.status(500).json({ error: "Error al actualizar usuario" });
     }
