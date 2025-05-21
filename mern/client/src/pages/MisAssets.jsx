@@ -131,39 +131,58 @@ function MisAssets() {
           {assets.length === 0 ? (
             <p>No has subido ningún asset aún.</p>
           ) : (
-            <div className="assets-grid">
+            <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {assets.map((asset) => (
-                <div className="asset-card2" key={asset._id}>
-                  <img
-                    src={
-                      asset.imagen
-                        ? `http://localhost:5050/uploads/${asset.imagen}`
-                        : "/images/placeholder.png"
-                    }
-                    alt={asset.titulo}
-                    className="asset-image"
-                  />
-                  <h4 className="asset-title">{asset.titulo}</h4>
-                  <p className="asset-category">{asset.categoria}</p>
-                  <div style={{ display: "flex", gap: "8px", marginTop: "8px" }}>
+                <li
+                  key={asset._id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    // justifyContent: "space-between", // Elimina esta línea
+                    padding: "12px 0",
+                    borderBottom: "1px solid #333",
+                  }}
+                >
+                  <span style={{ fontWeight: "bold", color: "#fff", minWidth: 0 }}>Titulo: {asset.titulo}</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      marginLeft: "24px" // Ajusta este valor para pegar más o menos los botones
+                    }}
+                  >
                     <button
                       className="edit-btn"
                       onClick={() => handleEdit(asset)}
-                      style={{ background: "#a78bfa", border: "none", borderRadius: "6px", padding: "6px 12px", cursor: "pointer" }}
+                      style={{
+                        background: "#a78bfa",
+                        color: "#18181b",
+                        border: "none",
+                        borderRadius: "6px",
+                        padding: "6px 12px",
+                        cursor: "pointer",
+                      }}
                     >
                       Editar
                     </button>
                     <button
                       className="delete-btn"
                       onClick={() => handleDelete(asset._id)}
-                      style={{ background: "#e57373", color: "#fff", border: "none", borderRadius: "6px", padding: "6px 12px", cursor: "pointer" }}
+                      style={{
+                        background: "#e57373",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "6px",
+                        padding: "6px 12px",
+                        cursor: "pointer",
+                      }}
                     >
                       Eliminar
                     </button>
                   </div>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           )}
         </section>
       </main>
