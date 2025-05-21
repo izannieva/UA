@@ -9,7 +9,8 @@ import {
   FiUser, 
   FiBox, 
   FiImage, 
-  FiPackage 
+  FiPackage,
+  FiFilter
 } from 'react-icons/fi';
 
 function ResultadoBusqueda() {
@@ -22,6 +23,7 @@ function ResultadoBusqueda() {
   const [currentPage, setCurrentPage] = useState(1);
   // Calculate items per page based on screen width
   const [itemsPerPage, setItemsPerPage] = useState(calculateItemsPerPage());
+  const [sortOrder, setSortOrder] = useState("newest"); // Opciones: newest, oldest, a-z, z-a
   
   const location = useLocation();
   
@@ -36,11 +38,56 @@ function ResultadoBusqueda() {
   }, [location.search]);
 
   useEffect(() => {
-      const API_URL = import.meta.env.VITE_API_URL;
+    const API_URL = import.meta.env.VITE_API_URL;
 
+    // Primero obtenemos todos los assets
     fetch(`${API_URL}/asset`)
       .then((res) => res.json())
-      .then((data) => setAssets(data))
+      .then((data) => {
+        // Obtenemos los IDs únicos de autores
+        const authorIds = [...new Set(data.map(asset => asset.autorId).filter(Boolean))];
+        
+        // Si hay autores, buscamos sus datos
+        if (authorIds.length > 0) {
+          // Hacemos peticiones para obtener la información de cada autor
+          const authorPromises = authorIds.map(authorId => 
+            fetch(`${API_URL}/user/${authorId}`)
+              .then(res => res.ok ? res.json() : null)
+              .catch(() => null)
+          );
+          
+          // Cuando tengamos todos los datos de autores
+          Promise.all(authorPromises)
+            .then(authors => {
+              // Creamos un mapa de ID -> datos del autor
+              const authorMap = {};
+              authors.forEach(author => {
+                if (author && author._id) {
+                  authorMap[author._id] = author;
+                }
+              });
+              
+              // Enriquecemos los assets con la información de sus autores
+              const enrichedAssets = data.map(asset => {
+                if (asset.autorId && authorMap[asset.autorId]) {
+                  return {
+                    ...asset,
+                    autor: authorMap[asset.autorId]
+                  };
+                }
+                return asset;
+              });
+              
+              setAssets(enrichedAssets);
+            })
+            .catch(err => {
+              console.error("Error fetching author data:", err);
+              setAssets(data);
+            });
+        } else {
+          setAssets(data);
+        }
+      })
       .catch(() => setAssets([]));
   }, [API_URL]);
 
@@ -62,24 +109,63 @@ function ResultadoBusqueda() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Filter assets - simplificado sin filtros de precio
+  // Filter assets - incluye búsqueda por tags
   const filteredAssets = assets.filter((asset) => {
     const matchesCategory =
       filter === "All" || (asset.categoria && asset.categoria.toLowerCase() === filter.toLowerCase());
+    
+    const searchLower = search.toLowerCase();
     const matchesSearch =
-      !search || (asset.titulo && asset.titulo.toLowerCase().includes(search.toLowerCase()));
+      !search || 
+      (asset.titulo && asset.titulo.toLowerCase().includes(searchLower)) ||
+      (Array.isArray(asset.tags) && asset.tags.some(tag => tag.toLowerCase().includes(searchLower)));
     
     return matchesCategory && matchesSearch;
   });
 
+  // Función para ordenar assets
+  const sortAssets = (assets) => {
+    switch (sortOrder) {
+      case "newest":
+        return [...assets].sort((a, b) => {
+          const dateA = a.fechaSubida ? new Date(a.fechaSubida) : new Date(0);
+          const dateB = b.fechaSubida ? new Date(b.fechaSubida) : new Date(0);
+          return dateB - dateA; // Más recientes primero
+        });
+      case "oldest":
+        return [...assets].sort((a, b) => {
+          const dateA = a.fechaSubida ? new Date(a.fechaSubida) : new Date(0);
+          const dateB = b.fechaSubida ? new Date(b.fechaSubida) : new Date(0);
+          return dateA - dateB; // Más antiguos primero
+        });
+      case "a-z":
+        return [...assets].sort((a, b) => {
+          const titleA = a.titulo?.toLowerCase() || "";
+          const titleB = b.titulo?.toLowerCase() || "";
+          return titleA.localeCompare(titleB);
+        });
+      case "z-a":
+        return [...assets].sort((a, b) => {
+          const titleA = a.titulo?.toLowerCase() || "";
+          const titleB = b.titulo?.toLowerCase() || "";
+          return titleB.localeCompare(titleA);
+        });
+      default:
+        return assets;
+    }
+  };
+
+  // Ordenar los assets filtrados
+  const sortedFilteredAssets = sortAssets(filteredAssets);
+
   // Ensure pagination resets when filter/search/items per page changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [filter, search, itemsPerPage]);
+  }, [filter, search, itemsPerPage, sortOrder]);
 
   // Pagination
-  const totalPages = Math.ceil(filteredAssets.length / itemsPerPage);
-  const paginatedAssets = filteredAssets.slice(
+  const totalPages = Math.ceil(sortedFilteredAssets.length / itemsPerPage);
+  const paginatedAssets = sortedFilteredAssets.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -136,7 +222,26 @@ function ResultadoBusqueda() {
         <div className="rb-header">
           <div className="rb-title-container">
             <h1>{filter === "All" ? "Todos los Assets" : filter}</h1>
-            <div className="rb-count">{filteredAssets.length} recursos</div>
+            <div className="rb-count">{sortedFilteredAssets.length} recursos</div>
+          </div>
+          
+          {/* Selector de ordenación (MOVIDO AQUÍ) */}
+          <div className="rb-sort-container">
+            <label htmlFor="sort-select" className="rb-sort-label">
+              <FiFilter className="rb-sort-icon" />
+              <span>Ordenar:</span>
+            </label>
+            <select 
+              id="sort-select"
+              className="rb-sort-select"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="newest">Más recientes</option>
+              <option value="oldest">Más antiguos</option>
+              <option value="a-z">Nombre (A-Z)</option>
+              <option value="z-a">Nombre (Z-A)</option>
+            </select>
           </div>
           
           {/* Barra de búsqueda con ícono */}
@@ -176,14 +281,20 @@ function ResultadoBusqueda() {
                       e.target.onerror = null;
                     }}
                   />
-                  <div className={`rb-asset-type type-${asset.tipo?.toLowerCase() || '3d'}`}>
-                    {asset.tipo || "3D"}
-                  </div>
+                  {/* Se ha eliminado el div que mostraba el tipo "3D" */}
                 </div>
                 <div className="rb-asset-info">
                   <h3 className="rb-asset-title">{asset.titulo || "Recurso sin nombre"}</h3>
                   <div className="rb-asset-creator">
-                    {asset.usuario?.nombre || "Creador desconocido"}
+                    <span className="creator-label">Subido:</span> {
+                      asset.fechaSubida 
+                        ? new Date(asset.fechaSubida).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })
+                        : "Fecha desconocida"
+                    }
                   </div>
                 </div>
               </Link>
