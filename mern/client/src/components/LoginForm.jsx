@@ -32,9 +32,9 @@ const LoginForm = ({ setIsAuthenticated }) => {
       setMessage("Introduce un correo válido y una contraseña de al menos 6 caracteres.");
       return;
     }
-
+          const API_URL = import.meta.env.VITE_API_URL;
     try {
-      const response = await fetch("http://localhost:5050/user/login", {
+      const response = await fetch(`${API_URL}/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

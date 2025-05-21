@@ -14,10 +14,11 @@ function LandingPage() {
   const [assets, setAssets] = useState([]);
   const [randomAssets, setRandomAssets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5050/asset")
+    fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => {
         setAssets(data);
@@ -118,7 +119,7 @@ function LandingPage() {
                         <img
                           src={
                             asset.imagen
-                              ? `http://localhost:5050/uploads/${asset.imagen}`
+                              ? `${API_URL}/uploads/${asset.imagen}`
                               : "/images/placeholder.png"
                           }
                           alt={asset.titulo}

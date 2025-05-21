@@ -5,6 +5,7 @@ import "../styles/StylePerfil.css";
 
 function Perfil() {
   const [userData, setUserData] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -12,7 +13,7 @@ function Perfil() {
         const token = localStorage.getItem("token");
         if (!token) return;
 
-        const response = await fetch("http://localhost:5050/user/perfil", {
+        const response = await fetch(`${API_URL}/user/perfil`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

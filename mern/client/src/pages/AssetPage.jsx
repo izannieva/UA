@@ -18,6 +18,8 @@ function Model({ modelUrl, onError }) {
 }
 
 function AssetPage() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { id } = useParams();
   const [asset, setAsset] = useState(null);
   const [assets, setAssets] = useState([]);
@@ -27,7 +29,7 @@ function AssetPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5050/asset/${id}`)
+    fetch(`${API_URL}/asset/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setAsset(data);
@@ -46,7 +48,7 @@ function AssetPage() {
   }, [id]);
 
   useEffect(() => {
-    fetch("http://localhost:5050/asset")
+    fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => setAssets(data))
       .catch(() => setAssets([]));
@@ -65,7 +67,7 @@ function AssetPage() {
   const modelPath = asset.modelo3D || asset.modelo;
   // Asegurar que la ruta del modelo tenga extensión
   const modelUrl = modelPath ? 
-    `http://localhost:5050/uploads/${modelPath}` : null;
+    `${API_URL}/uploads/${modelPath}` : null;
   
   // Función para manejar el cambio entre imagen y modelo 3D
   const toggleViewMode = () => {
@@ -103,7 +105,7 @@ function AssetPage() {
             </div>
           ) : (
             <img 
-              src={`http://localhost:5050/uploads/${asset.imagen}`} 
+              src={`${API_URL}/uploads/${asset.imagen}`} 
               alt={asset.titulo} 
               className="main-image" 
               onError={(e) => {
@@ -115,7 +117,7 @@ function AssetPage() {
           {/* Miniaturas con opción para cambiar de vista */}
           <div className="thumbnail-row">
             <img 
-              src={`http://localhost:5050/uploads/${asset.imagen}`} 
+              src={`${API_URL}/uploads/${asset.imagen}`} 
               alt={asset.titulo} 
               className={`thumbnail ${viewMode === 'image' ? 'active' : ''}`}
               onClick={() => setViewMode('image')}
@@ -213,7 +215,7 @@ function AssetPage() {
                 <img
                   src={
                     a.imagen
-                      ? `http://localhost:5050/uploads/${a.imagen}`
+                      ? `${API_URL}/uploads/${a.imagen}`
                       : "/images/placeholder.png"
                   }
                   alt={a.titulo}

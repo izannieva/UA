@@ -13,6 +13,8 @@ import {
 } from 'react-icons/fi';
 
 function ResultadoBusqueda() {
+  const API_URL = import.meta.env.VITE_API_URL;  // <--- Declaración global aquí
+
   // Existing state variables
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("All");
@@ -24,19 +26,23 @@ function ResultadoBusqueda() {
   const location = useLocation();
   
   useEffect(() => {
+
     const params = new URLSearchParams(location.search);
     const filtroURL = params.get("filter");
     const searchURL = params.get("search");
+
     if (filtroURL) setFilter(filtroURL);
     if (searchURL) setSearch(searchURL);
   }, [location.search]);
 
   useEffect(() => {
-    fetch("http://localhost:5050/asset")
+      const API_URL = import.meta.env.VITE_API_URL;
+
+    fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => setAssets(data))
       .catch(() => setAssets([]));
-  }, []);
+  }, [API_URL]);
 
   // Calculate optimal items per page based on screen width
   function calculateItemsPerPage() {
@@ -160,7 +166,7 @@ function ResultadoBusqueda() {
                   <img
                     src={
                       asset.imagen
-                        ? `http://localhost:5050/uploads/${asset.imagen}`
+                        ? `${API_URL}/uploads/${asset.imagen}`
                         : "/images/asset-placeholder.png"
                     }
                     alt={asset.titulo || "Recurso"}
@@ -194,7 +200,6 @@ function ResultadoBusqueda() {
               >
                 Anterior
               </button>
-              {/* Lógica de paginación */}
               <button
                 className="rb-pagination-button"
                 disabled={currentPage === totalPages}
