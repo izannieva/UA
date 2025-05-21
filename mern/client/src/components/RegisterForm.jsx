@@ -14,7 +14,7 @@ const RegisterForm = () => {
 
   const [countries, setCountries] = useState([]);
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // Inicializa useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCountries([
@@ -34,12 +34,10 @@ const RegisterForm = () => {
     }));
   };
 
-
-
   const validateForm = () => {
     const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-    
+
     return (
       emailRegex.test(formData.correo) &&
       nameRegex.test(formData.nombre) &&
@@ -57,8 +55,10 @@ const RegisterForm = () => {
       return;
     }
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     try {
-      const response = await fetch("http://localhost:5050/user", {
+      const response = await fetch(`${API_URL}/user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,8 +71,7 @@ const RegisterForm = () => {
       if (response.ok) {
         setMessage("Registro exitoso");
         console.log("Usuario creado:", data);
-        setTimeout(() => navigate("/login")); // Redirige al login
-
+        setTimeout(() => navigate("/login"));
       } else {
         setMessage("Error: " + (data.error || "No se pudo registrar"));
       }
@@ -138,7 +137,7 @@ const RegisterForm = () => {
         required
       />
 
-      <button type="submit"  disabled={!validateForm()}>
+      <button type="submit" disabled={!validateForm()}>
         Continuar
       </button>
 
