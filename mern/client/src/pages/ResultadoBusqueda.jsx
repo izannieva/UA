@@ -1,11 +1,4 @@
 import { useEffect, useState } from "react";
-import {
-  FiBox,
-  FiGrid,
-  FiImage,
-  FiPackage,
-  FiUser
-} from 'react-icons/fi';
 import { Link, useLocation } from "react-router-dom";
 import "../styles/StyleResultadoBusqueda.css";
 import { 

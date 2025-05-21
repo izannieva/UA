@@ -147,25 +147,25 @@ function UploadAssetPage() {
 
   // Modificación del diseño del formulario para hacerlo horizontal
   return (
-    <div className="upload-container">
+    <div className="asset-upload-container">
       {/* Modal de éxito */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="success-modal">
-            <div className="modal-icon">
+        <div className="asset-upload-modal-overlay">
+          <div className="asset-upload-success-modal">
+            <div className="asset-upload-modal-icon">
               <FiCheck size={40} />
             </div>
             <h2>¡Asset subido con éxito!</h2>
             <p>Tu asset ha sido publicado correctamente y ya está disponible en la plataforma.</p>
-            <div className="modal-actions">
+            <div className="asset-upload-modal-actions">
               <button 
-                className="modal-button view-asset" 
+                className="asset-upload-modal-button asset-upload-view-asset" 
                 onClick={() => navigate("/")}
               >
                 Ver en explorador
               </button>
               <button 
-                className="modal-button upload-more" 
+                className="asset-upload-modal-button asset-upload-upload-more" 
                 onClick={() => setShowModal(false)}
               >
                 Subir otro asset
@@ -175,15 +175,15 @@ function UploadAssetPage() {
         </div>
       )}
 
-      <form className="upload-form" onSubmit={handleSubmit}>
-        {error && <div className="form-error">{error}</div>}
+      <form className="asset-upload-form" onSubmit={handleSubmit}>
+        {error && <div className="asset-upload-form-error">{error}</div>}
         
-        <div className="form-row">
+        <div className="asset-upload-form-row">
           {/* Columna 1: Archivos */}
-          <div className="form-group">
-            <h3 className="section-title">Archivos</h3>
+          <div className="asset-upload-form-group">
+            <h3 className="asset-upload-section-title">Archivos</h3>
             <label>Modelo 3D (requerido)</label>
-            <div className="file-upload">
+            <div className="asset-upload-file-upload">
               <input
                 id="modelo-upload-input"
                 type="file"
@@ -195,14 +195,14 @@ function UploadAssetPage() {
               <label htmlFor="modelo-upload-input">Examinar archivos</label>
               <span>o arrastra tu archivo aquí</span>
               {form.modelo && (
-                <div className="file-name">
+                <div className="asset-upload-file-name">
                   {form.modelo.name}
                 </div>
               )}
             </div>
             
             <label>Imagen de vista previa</label>
-            <div className="file-upload">
+            <div className="asset-upload-file-upload">
               <input
                 id="imagen-upload-input"
                 type="file"
@@ -213,19 +213,19 @@ function UploadAssetPage() {
               <label htmlFor="imagen-upload-input">Seleccionar imagen</label>
               <span>Recomendado: formato PNG, 1024x1024px</span>
               {form.imagen && (
-                <div className="image-preview-container">
+                <div className="asset-upload-image-preview-container">
                   <img 
                     src={URL.createObjectURL(form.imagen)} 
                     alt="Vista previa" 
-                    className="image-preview" 
+                    className="asset-upload-image-preview" 
                   />
                 </div>
               )}
             </div>
             
-            <div className="tips-container">
-              <div className="tips-title">Formatos soportados</div>
-              <ul className="tips-list">
+            <div className="asset-upload-tips-container">
+              <div className="asset-upload-tips-title">Formatos soportados</div>
+              <ul className="asset-upload-tips-list">
                 <li>Modelos: .glb, .fbx, .obj, .gltf</li>
                 <li>Imágenes: .png, .jpg, .webp</li>
               </ul>
@@ -233,8 +233,8 @@ function UploadAssetPage() {
           </div>
           
           {/* Columna 2: Información */}
-          <div className="form-group">
-            <h3 className="section-title">Información</h3>
+          <div className="asset-upload-form-group">
+            <h3 className="asset-upload-section-title">Información</h3>
             <label>Título</label>
             <input
               type="text"
@@ -259,7 +259,7 @@ function UploadAssetPage() {
               name="categories"
               value={form.categories}
               onChange={handleChange}
-              className="category-select"
+              className="asset-upload-category-select"
               required
             >
               {availableCategories.map(category => (
@@ -269,9 +269,9 @@ function UploadAssetPage() {
               ))}
             </select>
             
-            <div className="tips-container">
-              <div className="tips-title">Consejos para mejor visibilidad</div>
-              <ul className="tips-list">
+            <div className="asset-upload-tips-container">
+              <div className="asset-upload-tips-title">Consejos para mejor visibilidad</div>
+              <ul className="asset-upload-tips-list">
                 <li>Usa un título descriptivo y específico</li>
                 <li>Incluye detalles técnicos en la descripción</li>
                 <li>Menciona el software utilizado para crear el asset</li>
@@ -280,33 +280,33 @@ function UploadAssetPage() {
           </div>
           
           {/* Columna 3: Etiquetas y Acción */}
-          <div className="form-group">
-            <h3 className="section-title">Etiquetas</h3>
-            <div className="tags-input-container">
+          <div className="asset-upload-form-group">
+            <h3 className="asset-upload-section-title">Etiquetas</h3>
+            <div className="asset-upload-tags-input-container">
               <input
                 type="text"
                 value={tagsInput}
                 onChange={handleTagsChange}
                 placeholder="medieval, low-poly, fantasy..."
-                className="tags-input"
+                className="asset-upload-tags-input"
               />
               <button 
                 type="button" 
                 onClick={handleAddTag} 
-                className="add-tag-button"
+                className="asset-upload-add-tag-button"
               >
                 +
               </button>
             </div>
-            <small className="input-helper">Añade palabras clave separadas por comas</small>
+            <small className="asset-upload-input-helper">Añade palabras clave separadas por comas</small>
             
-            <div className="tags-container">
+            <div className="asset-upload-tags-container">
               {form.tags.map((tag, index) => (
-                <div key={index} className="tag-chip">
+                <div key={index} className="asset-upload-tag-chip">
                   <span>{tag}</span>
                   <button
                     type="button"
-                    className="tag-remove"
+                    className="asset-upload-tag-remove"
                     onClick={() => handleRemoveTag(tag)}
                   >
                     <FiX size={12} />
@@ -315,8 +315,8 @@ function UploadAssetPage() {
               ))}
             </div>
             
-            <div className="tips-container">
-              <div className="tips-title">Etiquetas sugeridas</div>
+            <div className="asset-upload-tips-container">
+              <div className="asset-upload-tips-title">Etiquetas sugeridas</div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '15px' }}>
                 {['low-poly', 'PBR', 'game-ready', 'animated', 'medieval', 'sci-fi', 'fantasy', 'realistic', 'stylized'].map(tag => (
                   <button
@@ -346,10 +346,10 @@ function UploadAssetPage() {
               </div>
             </div>
             
-            <div className="form-actions">
-              <div className="button-group">
-                <button type="button" onClick={handleCancel} className="secondary">Cancelar</button>
-                <button type="submit" className="primary">Publicar</button>
+            <div className="asset-upload-form-actions">
+              <div className="asset-upload-button-group">
+                <button type="button" onClick={handleCancel} className="asset-upload-secondary">Cancelar</button>
+                <button type="submit" className="asset-upload-primary">Publicar</button>
               </div>
             </div>
           </div>
