@@ -119,7 +119,7 @@ function LandingPage() {
                         <img
                           src={
                             asset.imagen
-                              ? `http://localhost:5050/uploads/${asset.imagen}`
+                              ? `${API_URL}/uploads/${asset.imagen}`
                               : "/images/placeholder.png"
                           }
                           alt={asset.titulo}

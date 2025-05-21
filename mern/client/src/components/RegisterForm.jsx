@@ -33,6 +33,7 @@ const RegisterForm = () => {
       [name]: value,
     }));
   };
+  
 
   const validateForm = () => {
     const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/;
