@@ -1,11 +1,10 @@
 import express from "express";
-import multer from "multer";
+import upload from "../utils/multerCloudinary.js";
+
 import { addAsset, borrarAsset, editAsset, getAsset, getAssets } from "../controllers/assetControllers.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" }); // Carpeta donde se guardan los archivos
-
 router.get("/", getAssets);
 router.post(
   "/",

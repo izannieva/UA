@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { FiArrowRight, FiBox, FiImage, FiPackage, FiRefreshCw, FiUsers } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import "../styles/styleLanding.css";
-import { FiBox, FiUsers, FiImage, FiPackage, FiArrowRight, FiRefreshCw } from "react-icons/fi";
 
 const categorias = [
   { id: "personajes", name: "Personajes", icon: <FiUsers /> },
@@ -119,7 +119,7 @@ function LandingPage() {
                         <img
                           src={
                             asset.imagen
-                              ? `${API_URL}/uploads/${asset.imagen}`
+                              ? asset.imagen // Usar directamente la URL de Cloudinary
                               : "/images/placeholder.png"
                           }
                           alt={asset.titulo}

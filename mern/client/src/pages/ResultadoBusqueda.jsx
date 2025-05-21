@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import {
+  FiBox,
+  FiGrid,
+  FiImage,
+  FiPackage,
+  FiUser
+} from 'react-icons/fi';
 import { Link, useLocation } from "react-router-dom";
 import "../styles/StyleResultadoBusqueda.css";
-import { 
-  FiArrowRight, 
-  FiSearch, 
-  FiStar, 
-  FiGrid, 
-  FiUser, 
-  FiBox, 
-  FiImage, 
-  FiPackage 
-} from 'react-icons/fi';
 
 function ResultadoBusqueda() {
   const API_URL = import.meta.env.VITE_API_URL;  // <--- Declaración global aquí
@@ -166,7 +163,7 @@ function ResultadoBusqueda() {
                   <img
                     src={
                       asset.imagen
-                        ? `${API_URL}/uploads/${asset.imagen}`
+                        ? asset.imagen // Usar directamente la URL de Cloudinary
                         : "/images/asset-placeholder.png"
                     }
                     alt={asset.titulo || "Recurso"}
