@@ -141,16 +141,15 @@ export const downloadAssetFile = (req, res) => {
   const filename = req.params.filename;
   const filePath = path.join(__dirname, "../uploads", filename);
 
+  console.log("Intentando descargar archivo desde:", filePath);
+
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
 
-  res.download(filePath, filename, err => {
+  res.download(filePath, filename, (err) => {
     if (err) {
       console.error("❌ Error al descargar archivo:", err);
       res.status(500).send("Error al descargar el archivo.");
     }
   });
 };
-
-import express from "express";
-import { downloadAssetFile } from "../controllers/assetControllers.js";
 

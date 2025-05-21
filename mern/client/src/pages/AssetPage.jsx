@@ -40,12 +40,13 @@ function AssetPage() {
     const token = localStorage.getItem("token");
   
     if (!token) {
-      alert("Debes estar logueado para descargar este asset.");
+      setShowLoginPopup(true);
       return;
     }
   
     try {
-      const response = await fetch(`http://localhost:5050/uploads/${asset.modelo}`, {
+      // Cambiar la URL para usar la ruta del backend
+      const response = await fetch(`http://localhost:5050/asset/download/${asset.modelo}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -60,40 +61,15 @@ function AssetPage() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = asset.modelo; // Nombre del archivo para la descarga
+      link.download = `${asset.titulo || "modelo"}.glb`; // Nombre del archivo descargado
       document.body.appendChild(link);
       link.click();
       link.remove();
     } catch (err) {
-      console.error(err);
+      console.error("Error al descargar el archivo:", err);
       alert("Ocurrió un error al descargar el asset.");
     }
   };
-
-//   const handleDownload = () => {
-//     const userStr = localStorage.getItem("token");
-//     const user = userStr ? JSON.parse(userStr) : null;
-  
-//     if (user && user._id) {
-//       // Usuario autenticado: descargar
-//       if (asset.modelo) {
-//         const downloadUrl = `http://localhost:5050/uploads/${asset.modelo}`;
-//         const link = document.createElement("a");
-//         link.href = downloadUrl;
-//         link.download = asset.modelo;
-//         document.body.appendChild(link);
-//         link.click();
-//         document.body.removeChild(link);
-//       } else {
-//         alert("Este asset no tiene un modelo para descargar.");
-//       }
-//     } else {
-//       // Usuario no autenticado: mostrar popup
-//       setShowLoginPopup(true);
-//     }
-//   };
-  
-  
   
 
   if (!asset) return <p>Cargando...</p>;
@@ -125,9 +101,6 @@ function AssetPage() {
 
 
                     <div className="details">
-                        <div className="rating">
-                            ⭐ 4.9 <span className="votes">(33)</span>
-                        </div>
                         <div className="detail-row">
                             <span className="label">Fecha</span>
                             <span className="value">
@@ -139,32 +112,15 @@ function AssetPage() {
                             </span>
                         </div>
                         <div className="detail-row">
-                            <span className="label">Licencia</span>
-                            <span className="value">Estándar</span>
-                        </div>
-                        <div className="detail-row">
                             <span className="label">Categoria</span>
                             <span className="value">{asset.categoria}</span>
-                        </div>
-                        <div className="detail-row">
-                            <span className="label">Permite IA</span>
-                            <span className="value">No</span>
-                        </div>
-                        <div className="detail-row">
-                            <span className="label">Generado con IA</span>
-                            <span className="value">No</span>
                         </div>
                     </div>
 
                     <div className="buttons">
                         <button className="primary" onClick={handleDownload}>
-                        Descargar ahora
+                            Descargar ahora
                         </button>
-                        <button className="secondary">Guardar en "Assets"</button>
-                        <div className="inline-buttons">
-                            <button className="tertiary">Compartir</button>
-                            <button className="tertiary danger">Denunciar</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -201,37 +157,6 @@ function AssetPage() {
                         </div>
                     </Link>
                 ))}
-                </div>
-            </div>
-
-            {/* Sección de comentarios */}
-            <div className="comments-section">
-                <h3>COMENTARIOS (1)</h3>
-
-                <div className="comment-input">
-                    <div className="user-icon">
-                        <i className="fa fa-user-circle" />
-                    </div>
-                    <input
-                        type="text"
-                        placeholder="Leave a comment, share your feedback. Don't be shy ;)"
-                    />
-                </div>
-
-                <div className="comment">
-                    <div className="user-icon">
-                        <i className="fa fa-user-circle" />
-                    </div>
-                    <div className="comment-content">
-                        <div className="username">
-                            <a href="#">3dg21</a> <span className="handle">@3dg21</span>
-                        </div>
-                        <div className="timestamp">a day ago</div>
-                        <div className="comment-text">
-                            nice, but there's a sharp edge near the bottom
-                        </div>
-                        <div className="reply">Reply</div>
-                    </div>
                 </div>
             </div>
             {showLoginPopup && (
