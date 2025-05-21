@@ -65,7 +65,6 @@ function ResultadoBusqueda() {
       filter === "All" || (asset.categoria && asset.categoria.toLowerCase() === filter.toLowerCase());
     const matchesSearch =
       !search || (asset.titulo && asset.titulo.toLowerCase().includes(search.toLowerCase()));
-    
     return matchesCategory && matchesSearch;
   });
 
@@ -153,38 +152,44 @@ function ResultadoBusqueda() {
         {/* Área con scroll para los recursos */}
         <div className="rb-assets-scroll-area">
           <div className="rb-assets-grid">
-            {paginatedAssets.map((asset) => (
-              <Link 
-                to={`/asset/${asset._id.$oid || asset._id}`} 
-                className="rb-asset-card" 
-                key={asset._id.$oid || asset._id}
-              >
-                <div className="rb-asset-image-container">
-                  <img
-                    src={
-                      asset.imagen
-                        ? `${API_URL}/uploads/${asset.imagen}`
-                        : "/images/asset-placeholder.png"
-                    }
-                    alt={asset.titulo || "Recurso"}
-                    className="rb-asset-image"
-                    onError={(e) => {
-                      e.target.src = "/images/asset-placeholder.png";
-                      e.target.onerror = null;
-                    }}
-                  />
-                  <div className={`rb-asset-type type-${asset.tipo?.toLowerCase() || '3d'}`}>
-                    {asset.tipo || "3D"}
-                  </div>
-                </div>
-                <div className="rb-asset-info">
-                  <h3 className="rb-asset-title">{asset.titulo || "Recurso sin nombre"}</h3>
-                  <div className="rb-asset-creator">
-                    {asset.usuario?.nombre || "Creador desconocido"}
-                  </div>
-                </div>
-              </Link>
-            ))}
+            {paginatedAssets.map((asset, idx) => {
+              try {
+                return (
+                  <Link 
+                    to={`/asset/${asset._id?.$oid || asset._id}`} 
+                    className="rb-asset-card" 
+                    key={asset._id?.$oid || asset._id || idx}
+                  >
+                    <div className="rb-asset-image-container">
+                      <img
+                        src={
+                          asset.imagen
+                            ? `${API_URL}/uploads/${asset.imagen}`
+                            : "/images/asset-placeholder.png"
+                        }
+                        alt={asset.titulo || "Recurso"}
+                        className="rb-asset-image"
+                        onError={(e) => {
+                          e.target.src = "/images/asset-placeholder.png";
+                          e.target.onerror = null;
+                        }}
+                      />
+                      <div className={`rb-asset-type type-${asset.tipo?.toLowerCase() || '3d'}`}>
+                        {asset.tipo || "3D"}
+                      </div>
+                    </div>
+                    <div className="rb-asset-info">
+                      <h3 className="rb-asset-title">{asset.titulo || "Recurso sin nombre"}</h3>
+                      <div className="rb-asset-creator">
+                        {asset.usuario?.nombre || "Creador desconocido"}
+                      </div>
+                    </div>
+                  </Link>
+                );
+              } catch (err) {
+                return <div key={idx} style={{color: 'red'}}>Error al renderizar asset</div>;
+              }
+            })}
           </div>
           
           {/* Paginación */}
@@ -213,3 +218,6 @@ function ResultadoBusqueda() {
 }
 
 export default ResultadoBusqueda;
+
+console.log("filteredAssets", filteredAssets);
+console.log("paginatedAssets", paginatedAssets);
