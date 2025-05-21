@@ -1,9 +1,8 @@
-import "../styles/styleAsset.css";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
-import { useEffect, useState, useMemo, Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import "../styles/styleAsset.css";
 
 // Componente para cargar y renderizar el modelo 3D con manejo de errores
 function Model({ modelUrl, onError }) {
@@ -34,10 +33,9 @@ function AssetPage() {
       .then((data) => {
         setAsset(data);
         setLoading(false);
-        
-        // Si hay modelo, verificar si la ruta tiene extensión
+
+        // Si hay modelo, prefiere empezar en modo modelo
         if (data.modelo3D || data.modelo) {
-          // Si hay modelo, prefiere empezar en modo modelo
           setViewMode('model');
         }
       })
@@ -65,10 +63,9 @@ function AssetPage() {
 
   // Verificar si el asset tiene un modelo 3D
   const modelPath = asset.modelo3D || asset.modelo;
-  // Asegurar que la ruta del modelo tenga extensión
-  const modelUrl = modelPath ? 
-    `${API_URL}/uploads/${modelPath}` : null;
-  
+  // Usar directamente la URL de Cloudinary
+  const modelUrl = modelPath ? modelPath : null;
+
   // Función para manejar el cambio entre imagen y modelo 3D
   const toggleViewMode = () => {
     setViewMode(viewMode === 'image' ? 'model' : 'image');
@@ -105,7 +102,7 @@ function AssetPage() {
             </div>
           ) : (
             <img 
-              src={`${API_URL}/uploads/${asset.imagen}`} 
+              src={asset.imagen || "/images/placeholder.png"} 
               alt={asset.titulo} 
               className="main-image" 
               onError={(e) => {
@@ -117,7 +114,7 @@ function AssetPage() {
           {/* Miniaturas con opción para cambiar de vista */}
           <div className="thumbnail-row">
             <img 
-              src={`${API_URL}/uploads/${asset.imagen}`} 
+              src={asset.imagen || "/images/placeholder.png"} 
               alt={asset.titulo} 
               className={`thumbnail ${viewMode === 'image' ? 'active' : ''}`}
               onClick={() => setViewMode('image')}
@@ -149,7 +146,6 @@ function AssetPage() {
               <span className="tag" key={index}>{tag}</span>
             ))}
           </div>
-
 
           <div className="details">
             <div className="rating">
@@ -213,11 +209,7 @@ function AssetPage() {
             >
               <div className="asset-card">
                 <img
-                  src={
-                    a.imagen
-                      ? `${API_URL}/uploads/${a.imagen}`
-                      : "/images/placeholder.png"
-                  }
+                  src={a.imagen ? a.imagen : "/images/placeholder.png"}
                   alt={a.titulo}
                   className="asset-image"
                 />
@@ -259,7 +251,6 @@ function AssetPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

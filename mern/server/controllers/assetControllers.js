@@ -1,7 +1,6 @@
-import fs from "fs";
-import path from "path";
 import { createAsset, deleteAsset, getAllAssets, getAssetById, updateAsset } from "../models/assetModel.js";
 
+// Obtener todos los assets
 export const getAssets = async (req, res) => {
     try {
         const assets = await getAllAssets();
@@ -11,35 +10,24 @@ export const getAssets = async (req, res) => {
     }
 };
 
-
+// Crear un asset
 export const addAsset = async (req, res) => {
   try {
-    // Los campos de texto llegan en req.body, los archivos en req.files
-    const {
-      titulo,
-      descripcion,
-      categoria,
-      fechaSubida
-    } = req.body;
+    const { titulo, descripcion, categoria, fechaSubida } = req.body;
 
     // Tags puede llegar como array o string
     let tags = req.body.tags;
     if (Array.isArray(tags)) {
-      // Si es array, está bien
+      // ok
     } else if (typeof tags === "string") {
-      // Si es string, puede ser un solo tag o varios (por ejemplo, tags[]=a&tags[]=b o tags=a)
-      try {
-        tags = JSON.parse(tags);
-      } catch {
-        tags = [tags];
-      }
+      try { tags = JSON.parse(tags); } catch { tags = [tags]; }
     } else {
       tags = [];
     }
 
-    // Archivos subidos
-    const modelo = req.files?.modelo?.[0]?.filename || null;
-    const imagen = req.files?.imagen?.[0]?.filename || null;
+    // Archivos subidos a Cloudinary (URL pública en .path)
+    const modelo = req.files?.modelo?.[0]?.path || null;
+    const imagen = req.files?.imagen?.[0]?.path || null;
 
     const newAsset = {
       titulo: titulo || null,
@@ -74,7 +62,8 @@ export const getAsset = async (req, res) => {
         res.status(500).json({ error: "Error al obtener Asset" });
     }
 };
-//borrra asset si es el autor
+
+// Borrar asset si es el autor
 export const borrarAsset = async (req, res) => {
     try {
         const { id } = req.params;
@@ -91,17 +80,7 @@ export const borrarAsset = async (req, res) => {
             return res.status(403).json({ error: "No tienes permiso para eliminar este asset" });
         }
 
-        // Eliminar archivos asociados si existen
-        if (asset.imagen) {
-            const imagePath = path.join("uploads", asset.imagen);
-            if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
-        }
-        if (asset.modelo) {
-            const modelPath = path.join("uploads", asset.modelo);
-            if (fs.existsSync(modelPath)) fs.unlinkSync(modelPath);
-        }
-
-        // Eliminar el asset de la base de datos
+        // No necesitas eliminar archivos locales, solo elimina el asset de la base de datos
         const result = await deleteAsset(id);
         if (result.deletedCount === 0) {
             return res.status(404).json({ error: "Asset no encontrado" });
@@ -113,6 +92,7 @@ export const borrarAsset = async (req, res) => {
     }
 };
 
+// Editar asset
 export const editAsset = async (req, res) => {
   try {
     const { id } = req.params;
@@ -133,7 +113,6 @@ export const editAsset = async (req, res) => {
     if (req.body.descripcion) updateData.descripcion = req.body.descripcion;
     if (req.body.categoria) updateData.categoria = req.body.categoria;
     if (req.body.tags) {
-      // Puede llegar como string o array
       let tags = req.body.tags;
       if (typeof tags === "string") {
         try { tags = JSON.parse(tags); } catch { tags = [tags]; }
@@ -141,22 +120,12 @@ export const editAsset = async (req, res) => {
       updateData.tags = tags;
     }
 
-    // Procesa archivos nuevos y elimina los antiguos si corresponde
+    // Procesa archivos nuevos (Cloudinary)
     if (req.files?.imagen?.[0]) {
-      // Elimina la imagen anterior si existe
-      if (asset.imagen) {
-        const oldImagePath = path.join("uploads", asset.imagen);
-        if (fs.existsSync(oldImagePath)) fs.unlinkSync(oldImagePath);
-      }
-      updateData.imagen = req.files.imagen[0].filename;
+      updateData.imagen = req.files.imagen[0].path;
     }
     if (req.files?.modelo?.[0]) {
-      // Elimina el modelo anterior si existe
-      if (asset.modelo) {
-        const oldModelPath = path.join("uploads", asset.modelo);
-        if (fs.existsSync(oldModelPath)) fs.unlinkSync(oldModelPath);
-      }
-      updateData.modelo = req.files.modelo[0].filename;
+      updateData.modelo = req.files.modelo[0].path;
     }
 
     const result = await updateAsset(id, updateData);
