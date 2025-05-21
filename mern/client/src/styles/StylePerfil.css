@@ -272,7 +272,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px;
   z-index: 10000; /* sobre todo lo demás */
   overflow-y: auto; /* para scroll interno si es necesario */
   backdrop-filter: blur(4px); /* para suavizar el fondo */
@@ -293,7 +292,6 @@ body {
 
 .modal-content h2 {
   margin-top: 0;
-  margin-bottom: 24px;
   font-weight: 700;
   font-size: 1.8rem;
   letter-spacing: 0.03em;
@@ -340,7 +338,6 @@ body {
 .modal-buttons {
   display: flex;
   gap: 16px;
-  margin-top: 28px;
   justify-content: center;
 }
 

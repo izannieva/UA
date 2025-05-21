@@ -1,6 +1,6 @@
 //definicion endpoints
 import express from "express";
-import { addUser, borrarUser, editUser, getUser, getUsers, loginUser } from "../controllers/userControllers.js";
+import { addUser, borrarUser, changePassword, editUser, getUser, getUsers, loginUser } from "../controllers/userControllers.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -12,5 +12,6 @@ router.get("/:id",verifyToken, getUser); // Obtener usuario por ID
 router.put("/:id",verifyToken, editUser); // Editar usuario
 router.delete("/:id",verifyToken, borrarUser); // Eliminar usuario
 router.get("/perfil",verifyToken, getUser); // Obtener perfil de usuario
+router.post("/change-password", verifyToken, changePassword);
 
 export default router;

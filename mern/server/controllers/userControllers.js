@@ -123,3 +123,25 @@ export const borrarUser = async (req, res) => {
         res.status(500).json({ error: "Error al eliminar usuario" });
     }
 };
+
+export const changePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { oldPw, newPw } = req.body;
+    if (!oldPw || !newPw) {
+      return res.status(400).json({ error: "Debes indicar ambas contraseñas" });
+    }
+    const user = await getUserById(userId);
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    const valid = await bcrypt.compare(oldPw, user.pw);
+    if (!valid) return res.status(401).json({ error: "Contraseña actual incorrecta" });
+
+    const hashed = await bcrypt.hash(newPw, 10);
+    await updateUser(userId, { pw: hashed });
+
+    res.json({ message: "Contraseña cambiada correctamente" });
+  } catch (err) {
+    res.status(500).json({ error: "Error al cambiar la contraseña" });
+  }
+};
