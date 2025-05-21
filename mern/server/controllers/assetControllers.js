@@ -129,3 +129,24 @@ export const editAsset = async (req, res) => {
         res.status(500).json({ error: "Error al editar asset" });
     }
 };
+
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Necesario para __dirname en ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const downloadAssetFile = (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, "../uploads", filename);
+
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+
+  res.download(filePath, filename, err => {
+    if (err) {
+      console.error("❌ Error al descargar archivo:", err);
+      res.status(500).send("Error al descargar el archivo.");
+    }
+  });
+};

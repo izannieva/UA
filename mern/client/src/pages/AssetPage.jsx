@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
+import { jwtDecode } from "jwt-decode"; // ✅ Correcto
+
+
 
 function AssetPage() {
 
   const { id } = useParams(); // <-- El ID dinámico de la URL
   const [asset, setAsset] = useState(null);
   const [assets, setAssets] = useState([]);
-  const user = JSON.parse(localStorage.getItem("user")); // o sessionStorage
   const [showLoginPopup, setShowLoginPopup] = useState(false);
 
 
@@ -34,16 +36,75 @@ function AssetPage() {
     return filtered.sort(() => 0.5 - Math.random()).slice(0, 5);
   }, [assets, asset]);
 
-  const handleDownload = () => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      // ✅ Aquí haces la descarga real
-      window.open(`http://localhost:5050/uploads/${asset.archivo}`, "_blank");
-    } else {
-      // ❌ Usuario no logueado, mostramos el modal
-      setShowLoginPopup(true);
+  const handleDownload = async () => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Debes estar logueado para descargar este asset.");
+      return;
+    }
+
+    let userId = null;
+
+    try {
+      const decoded = jwtDecode(token);
+      userId = decoded.id; // o decoded.userId dependiendo de tu token
+    } catch (err) {
+      console.error("Token inválido:", err);
+      alert("Token inválido. Por favor, inicia sesión de nuevo.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/asset/download/filename.glb`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al descargar el archivo");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = asset.modelo;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      console.error(err);
+      alert("Ocurrió un error al descargar el asset.");
     }
   };
+
+//   const handleDownload = () => {
+//     const userStr = localStorage.getItem("token");
+//     const user = userStr ? JSON.parse(userStr) : null;
+  
+//     if (user && user._id) {
+//       // Usuario autenticado: descargar
+//       if (asset.modelo) {
+//         const downloadUrl = `http://localhost:5050/uploads/${asset.modelo}`;
+//         const link = document.createElement("a");
+//         link.href = downloadUrl;
+//         link.download = asset.modelo;
+//         document.body.appendChild(link);
+//         link.click();
+//         document.body.removeChild(link);
+//       } else {
+//         alert("Este asset no tiene un modelo para descargar.");
+//       }
+//     } else {
+//       // Usuario no autenticado: mostrar popup
+//       setShowLoginPopup(true);
+//     }
+//   };
+  
+  
   
 
   if (!asset) return <p>Cargando...</p>;
