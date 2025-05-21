@@ -27,12 +27,14 @@ function ResultadoBusqueda() {
     const params = new URLSearchParams(location.search);
     const filtroURL = params.get("filter");
     const searchURL = params.get("search");
+    const API_URL = import.meta.env.VITE_API_URL;
+
     if (filtroURL) setFilter(filtroURL);
     if (searchURL) setSearch(searchURL);
   }, [location.search]);
 
   useEffect(() => {
-    fetch("http://localhost:5050/asset")
+    fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => setAssets(data))
       .catch(() => setAssets([]));

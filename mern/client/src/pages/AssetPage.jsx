@@ -18,6 +18,8 @@ function Model({ modelUrl, onError }) {
 }
 
 function AssetPage() {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const { id } = useParams();
   const [asset, setAsset] = useState(null);
   const [assets, setAssets] = useState([]);
@@ -27,7 +29,7 @@ function AssetPage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5050/asset/${id}`)
+    fetch(`${API_URL}/asset/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setAsset(data);
@@ -46,7 +48,7 @@ function AssetPage() {
   }, [id]);
 
   useEffect(() => {
-    fetch("http://localhost:5050/asset")
+    fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => setAssets(data))
       .catch(() => setAssets([]));

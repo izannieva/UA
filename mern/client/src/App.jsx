@@ -12,7 +12,7 @@ import UploadAssetPage from "./pages/UploadAssetPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // null = aún no sabemos
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -20,7 +20,7 @@ function App() {
       return;
     }
     // Validar token con el backend
-    fetch("http://localhost:5050/user/perfil", {
+    fetch(`${API_URL}/user/perfil`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => {

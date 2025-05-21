@@ -78,7 +78,9 @@ function UploadAssetPage() {
       formData.append("fechaSubida", new Date().toISOString()); // Fecha actual
 
       // Enviar la solicitud al backend
-      const res = await fetch("http://localhost:5050/asset", {
+      const API_URL = import.meta.env.VITE_API_URL;
+
+      const res = await fetch(`${API_URL}/asset`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`, // Enviar el token en la cabecera

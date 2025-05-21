@@ -9,13 +9,13 @@ function MisAssets() {
   const [showModal, setShowModal] = useState(false);
   const [editAsset, setEditAsset] = useState(null);
   const [editForm, setEditForm] = useState({ titulo: "", categoria: "" });
-
+  const API_URL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      const resUser = await fetch("http://localhost:5050/user/perfil", {
+      const resUser = await fetch(`${API_URL}/user/perfil`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const user = await resUser.json();
@@ -23,7 +23,7 @@ function MisAssets() {
 
       setUserData(user);
 
-      const resAssets = await fetch("http://localhost:5050/asset", {
+      const resAssets = await fetch(`${API_URL}/asset`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -42,7 +42,7 @@ function MisAssets() {
   const handleDelete = async (id) => {
     if (!window.confirm("¿Seguro que quieres eliminar este asset?")) return;
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:5050/asset/${id}`, {
+    const res = await fetch(`${API_URL}/asset/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -63,7 +63,7 @@ function MisAssets() {
   // Guardar cambios
   const handleSaveEdit = async () => {
     const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:5050/asset/${editAsset._id}`, {
+    const res = await fetch(`${API_URL}/asset/${editAsset._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
