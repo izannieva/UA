@@ -13,6 +13,8 @@ import {
 } from 'react-icons/fi';
 
 function ResultadoBusqueda() {
+  const API_URL = import.meta.env.VITE_API_URL;  // <--- Declaración global aquí
+
   // Existing state variables
   const [assets, setAssets] = useState([]);
   const [filter, setFilter] = useState("All");
@@ -33,13 +35,11 @@ function ResultadoBusqueda() {
   }, [location.search]);
 
   useEffect(() => {
-        const API_URL = import.meta.env.VITE_API_URL;
-
     fetch(`${API_URL}/asset`)
       .then((res) => res.json())
       .then((data) => setAssets(data))
       .catch(() => setAssets([]));
-  }, []);
+  }, [API_URL]);
 
   // Calculate optimal items per page based on screen width
   function calculateItemsPerPage() {
@@ -197,7 +197,6 @@ function ResultadoBusqueda() {
               >
                 Anterior
               </button>
-              {/* Lógica de paginación */}
               <button
                 className="rb-pagination-button"
                 disabled={currentPage === totalPages}
