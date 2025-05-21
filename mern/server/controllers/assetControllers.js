@@ -153,3 +153,11 @@ export const downloadAssetFile = (req, res) => {
   });
 };
 
+// Author section component
+<div className="author-section">
+  <i className="fa fa-user-circle author-icon" />
+  <span className="author-name">
+    {author ? `${author.nombre}` : "Cargando..."}
+  </span>
+</div>
+

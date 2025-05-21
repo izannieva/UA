@@ -15,7 +15,7 @@ export const createUser = async (userData) => {
 // Obtener usuario por ID
 export const getUserById = async (id) => {
     return await db.collection("User").findOne({ _id: new ObjectId(id) });
-};
+  };
 
 // Actualizar usuario
 export const updateUser = async (id, updatedData) => {
