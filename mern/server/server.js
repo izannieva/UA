@@ -9,11 +9,18 @@ dotenv.config(); // Cargar variables de entorno
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173", // Tu frontend local
+  credentials: true // Solo si estás usando cookies o headers como Authorization
+}));
 app.use(express.json());
 
 // Servir archivos estáticos de la carpeta uploads
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', (req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+  next();
+}, express.static('uploads'));
+
 
 //rutas
 app.use("/user", userRoutes);

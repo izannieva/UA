@@ -20,4 +20,10 @@ router.get("/:id", getAsset);
 router.delete("/:id", verifyToken, borrarAsset);
 router.put("/:id", verifyToken, editAsset); 
 
+import { downloadAssetFile } from "../controllers/assetControllers.js";
+
+// Nueva ruta
+router.get("/download/:filename", downloadAssetFile);
+
+
 export default router;
