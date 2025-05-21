@@ -38,40 +38,29 @@ function AssetPage() {
 
   const handleDownload = async () => {
     const token = localStorage.getItem("token");
-
+  
     if (!token) {
       alert("Debes estar logueado para descargar este asset.");
       return;
     }
-
-    let userId = null;
-
+  
     try {
-      const decoded = jwtDecode(token);
-      userId = decoded.id; // o decoded.userId dependiendo de tu token
-    } catch (err) {
-      console.error("Token inválido:", err);
-      alert("Token inválido. Por favor, inicia sesión de nuevo.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`http://localhost:3000/asset/download/filename.glb`, {
+      const response = await fetch(`http://localhost:5050/uploads/${asset.modelo}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error("Error al descargar el archivo");
       }
-
+  
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = asset.modelo;
+      link.download = asset.modelo; // Nombre del archivo para la descarga
       document.body.appendChild(link);
       link.click();
       link.remove();

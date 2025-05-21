@@ -150,3 +150,7 @@ export const downloadAssetFile = (req, res) => {
     }
   });
 };
+
+import express from "express";
+import { downloadAssetFile } from "../controllers/assetControllers.js";
+
