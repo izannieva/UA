@@ -163,7 +163,7 @@ function ResultadoBusqueda() {
                   <img
                     src={
                       asset.imagen
-                        ? `http://localhost:5050/uploads/${asset.imagen}`
+                        ? `${API_URL}/uploads/${asset.imagen}`
                         : "/images/asset-placeholder.png"
                     }
                     alt={asset.titulo || "Recurso"}
