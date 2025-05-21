@@ -9,15 +9,15 @@ body {
   overflow-x: hidden; /* Prevent horizontal scroll */
 }
   
-/* Landing Container - Remove scroll */
+/* Landing Container - Remove space between navbar and content */
 .landing-container {
   display: flex;
   min-height: 100vh;
-  padding-top: 80px; /* Para evitar que se sobreponga con el navbar */
-  overflow: visible; /* Change from hidden to visible */
+  padding-top: 60px; /* Reducido de 80px para estar más pegado a la navbar */
+  overflow: visible;
 }
   
-/* Sidebar Styles */
+/* Sidebar Styles - Ajuste para que comience justo debajo de la navbar */
 .sidebar {
   width: 240px;
   background-color: #18181b;
@@ -26,7 +26,7 @@ body {
   color: #aaa;
   flex-shrink: 0;
   position: fixed;
-  top: 80px;
+  top: 60px; /* Reducido de 80px para estar pegado a la navbar */
   bottom: 0;
   overflow-y: auto;
   display: flex;
@@ -119,23 +119,25 @@ body {
   flex-grow: 1;
   padding: 0 32px 32px 32px;
   margin-left: 240px;
-  overflow-y: visible; /* Change from auto to visible */
-  max-height: none; /* Remove max-height limitation */
+  overflow-y: visible;
+  max-height: none;
+  margin-top: 0; /* Asegurarse de que no hay margen superior */
 }
   
 /* Hero Banner */
 .hero-banner {
   background: linear-gradient(135deg, #2d225a 0%, #453285 60%, #6b46c1 100%);
-  border-radius: 16px;
-  padding: 40px; /* Increased padding */
-
+  border-radius: 0 0 16px 16px; /* Cambio: quitar radius superior para que parezca pegado */
+  padding: 40px;
   display: flex;
   align-items: center;
-  gap: 40px; /* Increased gap */
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3); /* Enhanced shadow */
+  gap: 40px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
   position: relative;
   overflow: hidden;
-  max-height: 200px; /* Slightly increased height */
+  max-height: 200px;
+  margin-top: 0,5%; 
+  margin-left: 2%;
 }
   
 .hero-banner::after {
@@ -369,10 +371,10 @@ body {
 .featured-assets {
   background-color: #18181b;
   border-radius: 16px;
-  padding: 30px; /* Increased padding */
- 
-  margin-bottom: 40px; /* Increased margin */
- 
+  padding: 30px;
+  margin-top: 20px; /* Añadir un poco de espacio después del banner */
+  margin-bottom: 40px;
+  margin-left: 2%;
 }
   
 .section-header {

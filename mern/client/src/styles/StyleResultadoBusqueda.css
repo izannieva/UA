@@ -146,9 +146,10 @@ h1 {
   position: sticky;
   top: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 /* ÁREA CON SCROLL INDEPENDIENTE PARA ASSETS */
@@ -157,32 +158,32 @@ h1 {
   overflow-y: auto; /* Habilita el scroll vertical solo en esta área */
   padding: 25px;
   height: calc(100% - 80px); /* Resta la altura aproximada del header */
+  padding-bottom: 80px; /* Aumentado para dejar espacio a la paginación */
 }
 
-/* Grid de assets */
+/* Grid de assets con más espacio al final */
 .rb-assets-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 25px;
-  padding-bottom: 80px; /* Espacio para la paginación */
+  padding-bottom: 40px; /* Reducido ya que no necesitamos tanto espacio */
 }
 
 /* Paginación fija al final */
 .rb-pagination {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative; /* Cambiado de fixed a relative */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px 0;
+  padding: 18px 0;
+  margin-top: 20px;
   background: rgba(18, 18, 22, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 10;
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
   border-top: 1px solid rgba(39, 39, 42, 0.5);
+  border-radius: 8px;
   gap: 8px;
+  width: 100%;
+  /* Eliminadas las propiedades bottom, left, right */
 }
 
 /* Animación para los botones de categorías */
@@ -221,14 +222,16 @@ h1 {
   position: sticky;
   top: 0;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .rb-title-container {
   display: flex;
   align-items: baseline;
+  flex-shrink: 0;
 }
 
 .search-header {
@@ -479,6 +482,19 @@ h1 {
     margin-left: 0;
     width: 100%;
   }
+  
+  .rb-assets-scroll-area {
+    padding-bottom: 70px;
+  }
+  
+  .rb-pagination {
+    padding: 15px 0;
+    margin-top: 15px;
+  }
+  
+  .rb-assets-grid {
+    padding-bottom: 20px;
+  }
 }
 
 /* Estilizar el icono de lupa igual que en navbar */
@@ -503,7 +519,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 25px;
-  padding-bottom: 80px;
+  padding-bottom: 40px;
 }
 
 .asset-card {
@@ -704,6 +720,14 @@ h1 {
 .rb-asset-creator {
   font-size: 0.85rem;
   color: #a1a1aa;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.creator-label {
+  color: #8a8a8a;
+  font-size: 0.75rem;
 }
 
 /* Overlay elegante */
@@ -769,21 +793,19 @@ h1 {
 }
 
 .rb-pagination {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative; /* Cambiado de fixed a relative */
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px 0;
+  padding: 18px 0;
+  margin-top: 20px;
   background: rgba(18, 18, 22, 0.95);
-  backdrop-filter: blur(10px);
-  z-index: 10;
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
-  margin-top: auto;
   border-top: 1px solid rgba(39, 39, 42, 0.5);
+  border-radius: 8px;
   gap: 8px;
+  width: 100%;
+  /* Eliminadas las propiedades bottom, left, right */
 }
 
 .pagination-button {
@@ -1091,4 +1113,66 @@ h1 {
   background: #18181b;
   border-right: 1px solid #27272a;
   padding: 30px 20px;
+}
+
+/* Estilos para el selector de ordenación - más pequeño y a la izquierda */
+.rb-sort-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 20px;
+  background: #232329;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  flex-shrink: 0;
+}
+
+.rb-sort-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #a1a1aa;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.rb-sort-icon {
+  color: #a78bfa;
+  font-size: 12px;
+}
+
+.rb-sort-select {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+  outline: none;
+  cursor: pointer;
+  max-width: 110px;
+}
+
+/* Estilos para las opciones del selector de ordenación */
+.rb-sort-select option {
+  background-color: #232329;
+  color: white;
+  padding: 8px;
+}
+
+/* Ajuste para corregir la apariencia en Chrome y Firefox */
+.rb-sort-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 2px center;
+  padding-right: 20px;
+}
+
+/* Importante: asegura que el elemento contenedor tiene un z-index correcto */
+.rb-sort-container {
+  position: relative;
+  z-index: 20;
 }
