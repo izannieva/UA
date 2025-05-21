@@ -94,147 +94,117 @@ function ResultadoBusqueda() {
 
   // Categories with icons
   const categories = [
-    { id: "All", name: "All Assets", icon: <FiGrid /> },
-    { id: "Personajes", name: "Characters", icon: <FiUser /> },
-    { id: "Objetos", name: "Props", icon: <FiBox /> },
-    { id: "Texturas", name: "Textures", icon: <FiImage /> },
-    { id: "Packs", name: "Packs", icon: <FiPackage /> }
+    { id: "All", name: "Todos los Assets", icon: <FiGrid /> },
+    { id: "Personajes", name: "Personajes", icon: <FiUser /> },
+    { id: "Objetos", name: "Objetos", icon: <FiBox /> },
+    { id: "Texturas", name: "Texturas", icon: <FiImage /> },
+    { id: "Packs", name: "Paquetes", icon: <FiPackage /> }
   ];
 
   // Generate random rating for demo purposes
   const getRandomRating = () => (Math.random() * 2 + 3).toFixed(1); // Between 3.0 and 5.0
 
+  // Dentro de la función de renderizado del componente
   return (
-    <div className="search-container search-container-with-navbar">
-      <div className="search-sidebar">
-        <h2 className="filter-title">✨ Explore Assets</h2>
-        <div className="category-filters">
+    <div className="rb-search-container rb-search-container-with-navbar">
+      {/* Barra lateral */}
+      <div className="ex-sidebar">
+        <h2 className="ex-cat-title">Explora</h2>
+        <div className="ex-cat-filters">
           {categories.map((category) => (
             <button
               key={category.id}
-              className={`category-button ${filter === category.id ? "active" : ""}`}
+              className={`ex-cat-button ${filter === category.id ? "active" : ""}`}
               onClick={() => handleFilterChange(category.id)}
             >
-              <span className="category-icon">{category.icon}</span>
-              <span className="category-name">{category.name}</span>
+              <span className="ex-cat-icon">{category.icon}</span>
+              <span className="ex-cat-name">{category.name}</span>
             </button>
           ))}
         </div>
-        
-        {/* Removemos la sección de filtros de precio */}
       </div>
       
-      <div className="search-content">
-        <div className="search-header">
-          <div className="title-container">
-            <h1>{filter === "All" ? "All Assets" : filter}</h1>
-            <div className="search-count">{filteredAssets.length} assets</div>
+      {/* Contenedor principal */}
+      <div className="rb-content">
+        {/* Header fijo */}
+        <div className="rb-header">
+          <div className="rb-title-container">
+            <h1>{filter === "All" ? "Todos los Assets" : filter}</h1>
+            <div className="rb-count">{filteredAssets.length} recursos</div>
           </div>
           
-          <form className="search-form" onSubmit={handleSearchSubmit}>
-            <div className="search-input-container">
-              <FiSearch className="search-icon" />
+          {/* Barra de búsqueda con ícono */}
+          <div className="ua-search-container">
+            <form onSubmit={handleSearchSubmit} className="ua-search-wrapper">
               <input
                 type="text"
-                placeholder="Search assets..."
+                className="ua-search-input"
+                placeholder="Buscar recursos..."
                 value={search}
                 onChange={handleSearchChange}
-                className="search-input"
               />
-            </div>
-            <button type="submit" className="search-submit">Search</button>
-          </form>
-        </div>
-        
-        <div className="assets-grid">
-          {paginatedAssets.map((asset) => (
-            <Link 
-              to={`/asset/${asset._id.$oid || asset._id}`} 
-              className="asset-card" 
-              key={asset._id.$oid || asset._id}
-            >
-              <div className="asset-image-container">
-                <img
-                  src={
-                    asset.imagen
-                      ? `http://localhost:5050/uploads/${asset.imagen}`
-                      : "/images/asset-placeholder.png"
-                  }
-                  alt={asset.titulo}
-                  className="asset-image"
-                  onError={(e) => {
-                    e.target.src = "/images/asset-placeholder.png";
-                    e.target.onerror = null; // Prevent infinite loop
-                  }}
-                />
-                <div className="asset-overlay">
-                  <h3 className="asset-title">{asset.titulo || "Unknown"}</h3>
-                </div>
-              </div>
-              <div className="asset-info">
-                <div className="asset-creator">
-                  {asset.usuario?.nombre || "Unknown"}
-                </div>
-                <div className="asset-meta">
-                  <div className="asset-rating">
-                    <FiStar className="star-icon" />
-                    <span>{getRandomRating()}</span>
-                  </div>
-                  <div className="asset-price">
-                    {asset.precio === 0 ? "Free" : `$${asset.precio}`}
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        
-        {totalPages > 1 && (
-          <div className="pagination">
-            <button
-              className="pagination-button"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              Previous
-            </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNum = currentPage > 3 && totalPages > 5 
-                ? (currentPage - 3) + i + 1 
-                : i + 1;
-              if (pageNum <= totalPages) {
-                return (
-                  <button
-                    key={pageNum}
-                    className={`pagination-button ${currentPage === pageNum ? "active" : ""}`}
-                    onClick={() => setCurrentPage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              }
-              return null;
-            })}
-            {totalPages > 5 && currentPage < totalPages - 2 && (
-              <>
-                <span className="pagination-ellipsis">...</span>
-                <button
-                  className="pagination-button"
-                  onClick={() => setCurrentPage(totalPages)}
-                >
-                  {totalPages}
-                </button>
-              </>
-            )}
-            <button
-              className="pagination-button"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-            </button>
+            </form>
           </div>
-        )}
+        </div>
+        
+        {/* Área con scroll para los recursos */}
+        <div className="rb-assets-scroll-area">
+          <div className="rb-assets-grid">
+            {paginatedAssets.map((asset) => (
+              <Link 
+                to={`/asset/${asset._id.$oid || asset._id}`} 
+                className="rb-asset-card" 
+                key={asset._id.$oid || asset._id}
+              >
+                <div className="rb-asset-image-container">
+                  <img
+                    src={
+                      asset.imagen
+                        ? `http://localhost:5050/uploads/${asset.imagen}`
+                        : "/images/asset-placeholder.png"
+                    }
+                    alt={asset.titulo || "Recurso"}
+                    className="rb-asset-image"
+                    onError={(e) => {
+                      e.target.src = "/images/asset-placeholder.png";
+                      e.target.onerror = null;
+                    }}
+                  />
+                  <div className={`rb-asset-type type-${asset.tipo?.toLowerCase() || '3d'}`}>
+                    {asset.tipo || "3D"}
+                  </div>
+                </div>
+                <div className="rb-asset-info">
+                  <h3 className="rb-asset-title">{asset.titulo || "Recurso sin nombre"}</h3>
+                  <div className="rb-asset-creator">
+                    {asset.usuario?.nombre || "Creador desconocido"}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="rb-pagination">
+              <button
+                className="rb-pagination-button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Anterior
+              </button>
+              {/* Lógica de paginación */}
+              <button
+                className="rb-pagination-button"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Siguiente
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
