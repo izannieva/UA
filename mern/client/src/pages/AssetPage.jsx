@@ -118,7 +118,7 @@ function AssetPage() {
                 alignItems: "center",
                 justifyContent: "center"
               }}>
-          {/* Vista 3D o imagen hay que cambiarlo */}
+          {/* Vista 3D o imagen hay que cambiarlo yowers */}
           {modelUrl && viewMode === 'model' && !modelError ? (
             <div
               className="model-viewer-container"
