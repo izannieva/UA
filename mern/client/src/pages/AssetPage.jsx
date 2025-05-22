@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/styleAsset.css";
 
+
 function AssetPage() {
   const { id } = useParams();
   const [asset, setAsset] = useState(null);
