@@ -1,7 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../styles/styleAsset.css";
 
+// Componente para cargar y renderizar el modelo 3D
+function Model({ modelUrl, onError }) {
+  try {
+    const { scene } = useGLTF(modelUrl);
+    return <primitive object={scene} />;
+  } catch (error) {
+    console.error("Error cargando el modelo:", error);
+    onError && onError(error);
+    return null;
+  }
+}
 
 function AssetPage() {
   const { id } = useParams();
@@ -9,6 +22,10 @@ function AssetPage() {
   const [assets, setAssets] = useState([]);
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [author, setAuthor] = useState(null);
+
+  // Estado para el visor 3D
+  const [modelError, setModelError] = useState(false);
+  const [viewMode, setViewMode] = useState('image'); // 'image' o 'model'
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -23,6 +40,8 @@ function AssetPage() {
             .then((userData) => setAuthor(userData))
             .catch((err) => console.error("Error al cargar el autor:", err));
         }
+        // Si hay modelo, prefiere empezar en modo modelo
+        if (data.modelo) setViewMode('model');
       })
       .catch((err) => console.error("Error al cargar el asset:", err));
   }, [id]);
@@ -49,7 +68,6 @@ function AssetPage() {
     }
 
     try {
-      // Si asset.modelo es una URL de Cloudinary, descarga directa:
       const response = await fetch(asset.modelo, {
         method: "GET",
         headers: {
@@ -77,31 +95,104 @@ function AssetPage() {
 
   if (!asset) return <p>Cargando...</p>;
 
+  // --- INICIO INTEGRACIÓN VISTA 3D ---
+  const modelUrl = asset.modelo || null;
+  const handleModelError = () => {
+    setModelError(true);
+    setViewMode('image');
+  };
+  // --- FIN INTEGRACIÓN VISTA 3D ---
+
   return (
     <div className="asset-page">
       <div className="asset-main">
-        <div className="asset-image-section">
-          <img
-            src={asset.imagen || "/images/placeholder.png"}
-            alt={asset.titulo}
-            className="main-image"
-          />
+        <div className="asset-image-section"
+         style={{
+                width: "100%",
+                height: "600px",
+                background: "#181824",
+                borderRadius: "16px",
+                overflow: "hidden",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+          {/* Vista 3D o imagen */}
+          {modelUrl && viewMode === 'model' && !modelError ? (
+            <div
+              className="model-viewer-container"
+              style={{
+                width: "100%",
+                height: "600px",
+                background: "#181824",
+                borderRadius: "16px",
+                overflow: "hidden",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+>
+              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+                <Suspense fallback={null}>
+                  <ambientLight intensity={0.5} />
+                  <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+                  <Stage environment="city" intensity={0.6}>
+                    <Model modelUrl={modelUrl} onError={handleModelError} />
+                  </Stage>
+                  <OrbitControls 
+                    autoRotate 
+                    enableZoom 
+                    enablePan 
+                    minPolarAngle={Math.PI / 6}
+                    maxPolarAngle={Math.PI / 2}
+                  />
+                </Suspense>
+              </Canvas>
+            </div>
+          ) : (
+            <img
+              src={asset.imagen || "/images/placeholder.png"}
+              alt={asset.titulo}
+              className="main-image"
+              onError={(e) => {
+                e.target.src = "/images/placeholder.png";
+              }}
+            />
+          )}
+
+          {/* Miniaturas para cambiar de vista */}
           <div className="thumbnail-row">
             <img
               src={asset.imagen || "/images/placeholder.png"}
               alt={asset.titulo}
-              className="thumbnail"
+              className={`thumbnail ${viewMode === 'image' ? 'active' : ''}`}
+              onClick={() => setViewMode('image')}
+              onError={(e) => {
+                e.target.src = "/images/placeholder.png";
+              }}
             />
-            <img
-              src={asset.imagen || "/images/placeholder.png"}
-              alt={asset.titulo}
-              className="thumbnail"
-            />
-            <img
-              src={asset.imagen || "/images/placeholder.png"}
-              alt={asset.titulo}
-              className="thumbnail"
-            />
+            {modelUrl && !modelError && (
+              <div
+                className={`thumbnail model-thumbnail ${viewMode === 'model' ? 'active' : ''}`}
+                onClick={() => setViewMode('model')}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  background: "#232329",
+                  color: "#a78bfa",
+                  borderRadius: "8px",
+                  padding: "0 12px",
+                  marginLeft: "8px",
+                  fontWeight: "bold"
+                }}
+              >
+                <span>Modelo 3D</span>
+              </div>
+            )}
           </div>
         </div>
 
