@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import { useParams } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import { jwtDecode } from "jwt-decode"; // ✅ Correcto
 
 function AssetPage() {
   const { id } = useParams(); // <-- El ID dinámico de la URL
