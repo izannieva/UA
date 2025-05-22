@@ -11,9 +11,9 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-
+app.use(express.json({ limit: "200mb" }));
+app.use(express.urlencoded({ extended: true, limit: "200mb" }));
 // Servir archivos estáticos de la carpeta uploads
-app.use('/uploads', express.static('uploads'));
 
 //rutas
 app.use("/user", userRoutes);

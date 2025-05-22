@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { FiBox, FiCheck, FiImage, FiPackage, FiUser, FiX } from 'react-icons/fi';
 import { useNavigate } from "react-router-dom";
 import "../styles/styleUploadAsset.css";
-import { FiX, FiUser, FiBox, FiImage, FiPackage, FiCheck } from 'react-icons/fi';
 
 function UploadAssetPage() {
   const [form, setForm] = useState({
@@ -190,7 +190,6 @@ function UploadAssetPage() {
                 name="modelo"
                 accept=".glb,.fbx,.obj,.gltf"
                 onChange={handleChange}
-                required
               />
               <label htmlFor="modelo-upload-input">Examinar archivos</label>
               <span>o arrastra tu archivo aquí</span>
