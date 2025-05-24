@@ -115,7 +115,7 @@ body {
 /* Main Content */
 .perfil-main {
   flex: 1;
-  padding: 32px;
+  padding: 10px;
   background-color: #18181b;
   border-radius: 12px;
   display: grid;
@@ -282,9 +282,9 @@ body {
   background-color: #1f1f2e; /* color oscuro elegante */
   padding: 30px 35px;
   border-radius: 16px;
-  width: 400px;
+  width: 550px;
   max-width: 90vw;
-  max-height: 80vh;
+  max-height: 90vh;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
   color: #f0f0f5;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -302,7 +302,7 @@ body {
 }
 
 .modal-form .form-row {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
   display: flex;
   flex-direction: column;
 }
@@ -312,8 +312,14 @@ body {
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 8px;
+  display: block;
 }
-
+.modal-form input,
+.modal-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+}
 .modal-form input {
   padding: 12px 14px;
   border-radius: 12px;

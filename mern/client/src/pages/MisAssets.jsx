@@ -203,89 +203,74 @@ function MisAssets() {
 
       {/* Modal de edición */}
       {showModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0, left: 0, right: 0, bottom: 0,
-            background: "rgba(0,0,0,0.6)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              background: "#232329",
-              padding: "32px",
-              borderRadius: "12px",
-              minWidth: "320px",
-              color: "#fff",
-              boxShadow: "0 4px 32px rgba(0,0,0,0.3)"
-            }}
-          >
-            <h3>Editar Asset</h3>
-            <label>Título</label>
-            <input
-              type="text"
-              value={editForm.titulo}
-              onChange={e => setEditForm(f => ({ ...f, titulo: e.target.value }))}
-              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
-            />
-            <label>Categoría</label>
-            <input
-              type="text"
-              value={editForm.categoria}
-              onChange={e => setEditForm(f => ({ ...f, categoria: e.target.value }))}
-              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
-            />
-            <label>Descripción</label>
-            <textarea
-              value={editForm.descripcion}
-              onChange={e => setEditForm(f => ({ ...f, descripcion: e.target.value }))}
-              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
-            />
+  <div className="modal-overlay" onClick={() => setShowModal(false)}>
+    <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <h2>Editar Asset</h2>
+      <form
+        className="modal-form"
+        onSubmit={e => {
+          e.preventDefault();
+          handleSaveEdit();
+        }}
+      >
+        <label htmlFor="titulo">Título</label>
+        <input
+          id="titulo"
+          type="text"
+          value={editForm.titulo}
+          onChange={e => setEditForm(f => ({ ...f, titulo: e.target.value }))}
+        />
 
-            <label>Tags (separados por coma)</label>
-            <input
-              type="text"
-              value={editForm.tags}
-              onChange={e => setEditForm(f => ({ ...f, tags: e.target.value }))}
-              style={{ width: "100%", marginBottom: "12px", padding: "8px", borderRadius: "6px", border: "1px solid #333", background: "#18181b", color: "#fff" }}
-            />
+        <label htmlFor="categoria">Categoría</label>
+        <input
+          id="categoria"
+          type="text"
+          value={editForm.categoria}
+          onChange={e => setEditForm(f => ({ ...f, categoria: e.target.value }))}
+        />
 
-            <label>Imagen</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e => setEditForm(f => ({ ...f, imagen: e.target.files[0] }))}
-              style={{ marginBottom: "12px" }}
-            />
+        <label htmlFor="descripcion">Descripción</label>
+        <textarea
+          id="descripcion"
+          value={editForm.descripcion}
+          onChange={e => setEditForm(f => ({ ...f, descripcion: e.target.value }))}
+          rows={3}
+        />
 
-            <label>Modelo</label>
-            <input
-              type="file"
-              accept=".glb,.obj,.fbx"
-              onChange={e => setEditForm(f => ({ ...f, modelo: e.target.files[0] }))}
-              style={{ marginBottom: "12px" }}
-            />
-            <div style={{ display: "flex", gap: "12px", marginTop: "16px" }}>
-              <button
-                onClick={handleSaveEdit}
-                style={{ background: "#a78bfa", color: "#18181b", border: "none", borderRadius: "6px", padding: "8px 18px", fontWeight: "bold", cursor: "pointer" }}
-              >
-                Guardar
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{ background: "#333", color: "#fff", border: "none", borderRadius: "6px", padding: "8px 18px", cursor: "pointer" }}
-              >
-                Cancelar
-              </button>
-            </div>
-          </div>
+        <label htmlFor="tags">Tags (separados por coma)</label>
+        <input
+          id="tags"
+          type="text"
+          value={editForm.tags}
+          onChange={e => setEditForm(f => ({ ...f, tags: e.target.value }))}
+        />
+
+        <label htmlFor="imagen">Imagen</label>
+        <input
+          id="imagen"
+          type="file"
+          accept="image/*"
+          onChange={e => setEditForm(f => ({ ...f, imagen: e.target.files[0] }))}
+        />
+
+        <label htmlFor="modelo">Modelo</label>
+        <input
+          id="modelo"
+          type="file"
+          accept=".glb,.obj,.fbx"
+          onChange={e => setEditForm(f => ({ ...f, modelo: e.target.files[0] }))}
+        />
+
+        <div className="modal-buttons">
+          <button type="submit" className="edit-button">Guardar</button>
+          <button type="button" className="edit-button" style={{ background: "#333", color: "#fff" }} onClick={() => setShowModal(false)}>
+            Cancelar
+          </button>
         </div>
-      )}
+      </form>
+    </div>
+  </div>
+)}
     </div>
   );
 }
