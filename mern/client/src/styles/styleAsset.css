@@ -433,3 +433,34 @@ border-radius: 10px;
 text-align: center;
 width: 300px;
 }
+
+.liked {
+  border: 1px solid rgba(167, 139, 250, 0.5) !important;
+}
+
+.liked svg {
+  stroke: #a78bfa;
+}
+
+.comments-list {
+  margin-top: 20px;
+}
+
+.comment-input button {
+  transition: background-color 0.2s ease;
+}
+
+.comment-input button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.comment-input button:hover:not(:disabled) {
+  background-color: #7656e8;
+}
+
+.timestamp {
+  margin-left: 10px;
+  font-size: 0.75rem;
+  color: #aaa;
+}

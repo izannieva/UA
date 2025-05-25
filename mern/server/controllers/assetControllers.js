@@ -1,4 +1,15 @@
-import { createAsset, deleteAsset, getAllAssets, getAssetById, updateAsset } from "../models/assetModel.js";
+import { 
+  createAsset, 
+  deleteAsset, 
+  getAllAssets, 
+  getAssetById, 
+  updateAsset,
+  likeAsset as likeAssetModel,
+  unlikeAsset as unlikeAssetModel,
+  addComment as addCommentModel,
+  deleteComment as deleteCommentModel,
+  incrementViews,
+} from "../models/assetModel.js";
 
 // Obtener todos los assets
 export const getAssets = async (req, res) => {
@@ -38,6 +49,9 @@ export const addAsset = async (req, res) => {
       tags,
       modelo,
       autorId: req.user?.id || null,
+      views: 0, // Initialize views to 0
+      likes: [], // Initialize likes as an empty array
+      comments: [] // Initialize comments as an empty array
     };
 
     const result = await createAsset(newAsset);
@@ -137,4 +151,149 @@ export const editAsset = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Error al editar asset" });
   }
+};
+
+// Like an asset
+export const likeAsset = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        // Verify if the asset exists
+        const asset = await getAssetById(id);
+        if (!asset) {
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+
+        // Add the like - now using the correctly named model function
+        await likeAssetModel(id, userId);
+        
+        res.json({ message: "Like añadido correctamente" });
+    } catch (error) {
+        console.error("Error in likeAsset controller:", error);
+        res.status(500).json({ error: "Error al dar like al asset" });
+    }
+};
+
+// Unlike an asset
+export const unlikeAsset = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+
+        // Verify if the asset exists
+        const asset = await getAssetById(id);
+        if (!asset) {
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+
+        // Remove the like - now using the correctly named model function
+        await unlikeAssetModel(id, userId);
+        
+        res.json({ message: "Like eliminado correctamente" });
+    } catch (error) {
+        console.error("Error in unlikeAsset controller:", error);
+        res.status(500).json({ error: "Error al quitar like del asset" });
+    }
+};
+
+// Add a comment to an asset
+export const addComment = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { text } = req.body;
+        const userId = req.user.id;
+        const userName = req.user.nombre || "Usuario";
+
+        if (!text) {
+            return res.status(400).json({ error: "El comentario no puede estar vacío" });
+        }
+
+        // Verify if the asset exists
+        const asset = await getAssetById(id);
+        if (!asset) {
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+
+        // Create the comment object
+        const comment = {
+            userId,
+            userName,
+            text,
+            timestamp: new Date()
+        };
+
+        // Add the comment to the asset - now using the correctly named model function
+        await addCommentModel(id, comment);
+        
+        res.status(201).json({ 
+            message: "Comentario añadido correctamente",
+            comment
+        });
+    } catch (error) {
+        console.error("Error in addComment controller:", error);
+        res.status(500).json({ error: "Error al añadir comentario" });
+    }
+};
+
+// Delete a comment
+export const deleteComment = async (req, res) => {
+    try {
+        const { id, commentId } = req.params;
+        const userId = req.user.id;
+
+        // Verify if the asset exists
+        const asset = await getAssetById(id);
+        if (!asset) {
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+
+        // Find the comment
+        const comment = asset.comments?.find(c => c._id.toString() === commentId);
+        
+        if (!comment) {
+            return res.status(404).json({ error: "Comentario no encontrado" });
+        }
+
+        // Check if the user is authorized to delete the comment
+        if (comment.userId !== userId && asset.autorId !== userId) {
+            return res.status(403).json({ error: "No tienes permiso para eliminar este comentario" });
+        }
+
+        // Delete the comment - now using the correctly named model function
+        await deleteCommentModel(id, commentId);
+        
+        res.json({ message: "Comentario eliminado correctamente" });
+    } catch (error) {
+        console.error("Error in deleteComment controller:", error);
+        res.status(500).json({ error: "Error al eliminar comentario" });
+    }
+};
+
+// Track asset view
+export const viewAsset = async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(`📊 Tracking view for asset ID: ${id}`);
+        
+        // First, check if the asset exists
+        const asset = await getAssetById(id);
+        if (!asset) {
+            console.log(`❌ Asset not found for ID: ${id}`);
+            return res.status(404).json({ error: "Asset no encontrado" });
+        }
+        
+        // Increment view count
+        const result = await incrementViews(id);
+        console.log(`📊 View increment result:`, result);
+        
+        res.json({ 
+            message: "View counted",
+            success: true,
+            viewCount: (asset.views || 0) + 1
+        });
+    } catch (error) {
+        console.error("❌ Error tracking view:", error);
+        res.status(500).json({ error: "Error al registrar visualización" });
+    }
 };

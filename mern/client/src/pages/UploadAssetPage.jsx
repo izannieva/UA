@@ -89,6 +89,17 @@ function UploadAssetPage() {
     setError("");
     setSuccess("");
 
+    // Validaciones del lado del cliente
+    if (!form.modelo) {
+      setError("El modelo 3D es obligatorio");
+      return;
+    }
+
+    if (!form.title || !form.description) {
+      setError("El título y la descripción son obligatorios");
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       if (!token) {
@@ -98,18 +109,29 @@ function UploadAssetPage() {
 
       // Crear el FormData para enviar archivos
       const formData = new FormData();
-      if (form.title) formData.append("titulo", form.title);
-      if (form.description) formData.append("descripcion", form.description);
-      if (form.categories) formData.append("categoria", form.categories);
-      if (form.tags.length) {
-        form.tags.forEach((tag) => formData.append("tags[]", tag));
+      formData.append("titulo", form.title);
+      formData.append("descripcion", form.description);
+      formData.append("categoria", form.categories);
+      
+      // Simplificar cómo se envían los tags - convertir a JSON string
+      formData.append("tags", JSON.stringify(form.tags));
+      
+      // Verificar tamaño del archivo (límite 10MB como ejemplo)
+      if (form.modelo && form.modelo.size > 10 * 1024 * 1024) {
+        setError("El modelo es demasiado grande. Máximo 10MB permitido.");
+        return;
       }
-      if (form.modelo) formData.append("modelo", form.modelo);
+      
+      formData.append("modelo", form.modelo);
       if (form.imagen) formData.append("imagen", form.imagen);
       formData.append("fechaSubida", new Date().toISOString());
 
       // Enviar la solicitud al backend
       const API_URL = import.meta.env.VITE_API_URL;
+
+      // Incluir timeout para evitar esperas largas
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const res = await fetch(`${API_URL}/asset`, {
         method: "POST",
@@ -117,17 +139,29 @@ function UploadAssetPage() {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
+      // Manejo de errores más detallado
       if (!res.ok) {
-        const data = await res.json();
-        setError(data.error || "Error al subir el asset.");
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          setError(data.error || `Error ${res.status}: Al subir el asset`);
+        } else {
+          // Respuesta no-JSON (probablemente HTML de error)
+          const text = await res.text();
+          console.error("Respuesta del servidor no es JSON:", text.substring(0, 150) + "...");
+          setError(`Error ${res.status}: El servidor encontró un problema interno`);
+        }
         return;
       }
 
       const data = await res.json();
       setSuccess("¡Asset subido correctamente!");
-      setShowModal(true); // Mostrar el modal de éxito
+      setShowModal(true);
       
       // Resetear el formulario
       setForm({
@@ -140,8 +174,12 @@ function UploadAssetPage() {
       });
       setTagsInput("");
     } catch (err) {
-      console.error("Error al subir el asset:", err);
-      setError("Error de conexión al subir el asset.");
+      if (err.name === 'AbortError') {
+        setError("La solicitud tardó demasiado tiempo. Verifica tu conexión o intenta con un archivo más pequeño.");
+      } else {
+        console.error("Error al subir el asset:", err);
+        setError("Error de conexión al subir el asset: " + (err.message || "Detalles desconocidos"));
+      }
     }
   };
 

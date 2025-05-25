@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { FiArrowRight, FiBox, FiImage, FiPackage, FiRefreshCw, FiUsers } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
+import { FiArrowRight, FiBox, FiEye, FiHeart, FiImage, FiMenu, FiPackage, FiRefreshCw, FiUsers, FiX } from "react-icons/fi";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/styleLanding.css";
 
 const categorias = [
@@ -11,18 +11,22 @@ const categorias = [
 ];
 
 function LandingPage() {
+  // Add state for mobile menu
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const location = useLocation();
   const [assets, setAssets] = useState([]);
   const [randomAssets, setRandomAssets] = useState([]);
   const [loading, setLoading] = useState(true);
   const API_URL = import.meta.env.VITE_API_URL;
 
-  useEffect(() => {
+  const fetchAssets = useCallback(() => {
     setLoading(true);
-    fetch(`${API_URL}/asset`)
+    // Add timestamp to prevent caching
+    fetch(`${API_URL}/asset?t=${new Date().getTime()}`)
       .then((res) => res.json())
       .then((data) => {
         setAssets(data);
-        // Seleccionar 4 assets aleatorios
         selectRandomAssets(data);
         setLoading(false);
       })
@@ -31,7 +35,13 @@ function LandingPage() {
         setAssets([]);
         setLoading(false);
       });
-  }, []);
+  }, [API_URL]);
+
+  // Make sure we refetch data when navigating back to the landing page
+  useEffect(() => {
+    // This will force a re-fetch when returning to this page
+    fetchAssets();
+  }, [fetchAssets, location.key]); // Add location.key as dependency
 
   // Función para seleccionar assets aleatorios
   const selectRandomAssets = (assetArray) => {
@@ -50,14 +60,22 @@ function LandingPage() {
     }
   };
 
+  // Function to toggle mobile menu
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <div className="landing-container">
-      <aside className="sidebar">
+      <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <h2>Explora</h2>
         <ul className="category-list">
           {categorias.map((cat) => (
             <li key={cat.id}>
-              <Link to={`/busqueda?filter=${encodeURIComponent(cat.name)}`}>
+              <Link 
+                to={`/busqueda?filter=${encodeURIComponent(cat.name)}`}
+                onClick={() => setMobileMenuOpen(false)} // Close menu when link clicked
+              >
                 <span className="category-icon">{cat.icon}</span>
                 {cat.name}
               </Link>
@@ -68,9 +86,16 @@ function LandingPage() {
         <div className="sidebar-cta">
           <h3>¿Tienes un asset?</h3>
           <p>Compártelo con la comunidad</p>
-          <Link to="/upload-asset" className="upload-button">Subir Asset</Link>
+          <Link to="/upload-asset" className="upload-button" onClick={() => setMobileMenuOpen(false)}>
+            Subir Asset
+          </Link>
         </div>
       </aside>
+
+      {/* Mobile menu toggle button */}
+      <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+        {mobileMenuOpen ? <FiX /> : <FiMenu />}
+      </button>
 
       <main className="main-content">
         {/* Banner simplificado */}
@@ -108,42 +133,54 @@ function LandingPage() {
           ) : (
             <div className="assets-display">
               {randomAssets.length > 0 ? (
-                <div className="assets-grid-compact">
+                <div className="nova-assets-grid">
                   {randomAssets.map((asset) => (
                     <Link 
                       to={`/asset/${asset._id.$oid || asset._id}`} 
-                      className="asset-card" 
+                      className="nova-asset-card" 
                       key={asset._id.$oid || asset._id}
                     >
-                      <div className="asset-image-container">
+                      <div className="nova-asset-image-container">
                         <img
                           src={
                             asset.imagen
-                              ? asset.imagen // Usar directamente la URL de Cloudinary
+                              ? asset.imagen 
                               : "/images/placeholder.png"
                           }
                           alt={asset.titulo}
-                          className="asset-image"
+                          className="nova-asset-image"
+                          onError={(e) => {
+                            e.target.src = "/images/placeholder.png";
+                          }}
                         />
-                        {/* Overlay title on the image */}
-                        <div className="asset-title-overlay">
-                          <h4 className="asset-title">{asset.titulo || "Sin título"}</h4>
-                        </div>
                       </div>
-                      <div className="asset-info">
-                        <div className="asset-creator">
-                          {asset.usuario?.nombre || "Usuario"}
+                      <div className="nova-asset-info">
+                        <h4 className="nova-asset-title">{asset.titulo || "Sin título"}</h4>
+                        
+                        {/* Tags section */}
+                        <div className="nova-asset-tags">
+                          {asset.tags && asset.tags.slice(0, 3).map((tag, index) => (
+                            <span key={index} className="nova-asset-tag">{tag}</span>
+                          ))}
+                          {asset.tags && asset.tags.length > 3 && (
+                            <span className="nova-asset-tag-more">+{asset.tags.length - 3}</span>
+                          )}
                         </div>
-                        <div className="asset-rating">
-                          <span className="asset-rating-stars">★★★★☆</span>
-                          <span className="asset-rating-count">{asset.downloads || 0}</span>
+                        
+                        {/* Like counter and upload date */}
+                        <div className="nova-asset-footer">
+                          <div className="nova-asset-stat">
+                            <FiHeart className="nova-stat-icon" />
+                            <span>{asset.likes?.length || 0}</span>
+                          </div>
+                          <span className="nova-asset-date">
+                            {new Date(asset.fechaSubida || Date.now()).toLocaleDateString("es-ES", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric"
+                            })}
+                          </span>
                         </div>
-                        {asset.precio === 0 && (
-                          <div className="asset-price free">Free</div>
-                        )}
-                        {asset.precio > 0 && (
-                          <div className="asset-price">${asset.precio}</div>
-                        )}
                       </div>
                     </Link>
                   ))}
