@@ -2,7 +2,7 @@ import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { FiHeart, FiMessageSquare, FiSend, FiTrash2 } from "react-icons/fi"; // Import icons
+import { FiHeart, FiMessageSquare, FiSend, FiTrash2, FiRefreshCw, FiRotateCcw } from "react-icons/fi";
 import "../styles/styleAsset.css";
 
 // Componente para cargar y renderizar el modelo 3D
@@ -58,11 +58,8 @@ function AssetPage() {
       .then((res) => res.json())
       .then((data) => {
         setAsset(data);
-        // Set comments if they exist
         setComments(data.comments || []);
-        // Set likes count
         setLikesCount(data.likes?.length || 0);
-        // Check if current user has liked this asset
         if (currentUser && data.likes) {
           setIsLiked(data.likes.includes(currentUser.id));
         }
@@ -183,8 +180,6 @@ function AssetPage() {
       }
 
       const data = await response.json();
-      
-      // Update UI with new comment
       setComments([...comments, data.comment]);
       setNewComment(""); // Clear input
     } catch (err) {
@@ -228,70 +223,79 @@ function AssetPage() {
   // --- FIN INTEGRACIÓN VISTA 3D ---
 
   return (
-    <div className="asset-page">
-      <div className="asset-main">
-        <div className="asset-image-section"
-         style={{
-                width: "100%",
-                height: "600px",
-                background: "#181824",
-                borderRadius: "16px",
-                overflow: "hidden",
-                marginBottom: "24px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}>
-          {/* Vista 3D o imagen hay que cambiarlo yowers */}
+    <div className="asset-view-page">
+      <div className="asset-view-main">
+        <div className="asset-view-image-section">
           {modelUrl && viewMode === 'model' && !modelError ? (
-            <div
-              className="model-viewer-container"
-              style={{
-                width: "100%",
-                height: "600px",
-                background: "#181824",
-                borderRadius: "16px",
-                overflow: "hidden",
-                marginBottom: "24px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
->
-              <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+            <div className="asset-view-model-container">
+              <Canvas camera={{ position: [0, 0, 5], fov: 45 }} shadows>
                 <Suspense fallback={null}>
-                  <ambientLight intensity={0.5} />
-                  <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-                  <Stage environment="city" intensity={0.6}>
+                  <color attach="background" args={['#1a1a1f']} />
+                  <fog attach="fog" args={['#1a1a1f', 8, 30]} />
+                  <ambientLight intensity={0.4} />
+                  <directionalLight 
+                    position={[10, 10, 5]} 
+                    intensity={0.8}
+                    castShadow 
+                    shadow-mapSize-width={1024} 
+                    shadow-mapSize-height={1024}
+                  />
+                  <spotLight 
+                    position={[-10, 10, 5]} 
+                    angle={0.15} 
+                    penumbra={1} 
+                    intensity={0.5} 
+                  />
+                  <Stage 
+                    environment="night" 
+                    intensity={0.5}
+                    contactShadow={{ opacity: 0.7, blur: 2 }}
+                    preset="rembrandt"
+                    adjustCamera={true}
+                  >
                     <Model modelUrl={modelUrl} onError={handleModelError} />
                   </Stage>
                   <OrbitControls 
                     autoRotate 
+                    autoRotateSpeed={1}
                     enableZoom 
                     enablePan 
                     minPolarAngle={Math.PI / 6}
-                    maxPolarAngle={Math.PI / 2}
+                    maxPolarAngle={Math.PI / 1.5}
+                    dampingFactor={0.05}
+                    minDistance={3}
+                    maxDistance={15}
                   />
                 </Suspense>
               </Canvas>
+              
+              <div className="asset-view-model-controls">
+                <button className="asset-view-model-button" onClick={() => { /* Implementar reset de cámara */ }}>
+                  <FiRefreshCw size={16} />
+                </button>
+                <button className="asset-view-model-button" onClick={() => { /* Implementar toggle de rotación */ }}>
+                  <FiRotateCcw size={16} />
+                </button>
+              </div>
             </div>
           ) : (
-            <img
-              src={asset.imagen || "/images/placeholder.png"}
-              alt={asset.titulo}
-              className="main-image"
-              onError={(e) => {
-                e.target.src = "/images/placeholder.png";
-              }}
-            />
+            <div className="asset-view-image-container">
+              <img
+                src={asset.imagen || "/images/placeholder.png"}
+                alt={asset.titulo}
+                className="asset-view-main-image"
+                onError={(e) => {
+                  e.target.src = "/images/placeholder.png";
+                }}
+              />
+            </div>
           )}
 
-          {/* Miniaturas para cambiar de vista */}
-          <div className="thumbnail-row">
+          <div className="asset-view-thumbnail-row">
             <img
               src={asset.imagen || "/images/placeholder.png"}
               alt={asset.titulo}
-              className={`thumbnail ${viewMode === 'image' ? 'active' : ''}`}
+              className={`asset-view-thumbnail ${viewMode === 'image' ? 'active' : ''}`}
               onClick={() => setViewMode('image')}
               onError={(e) => {
                 e.target.src = "/images/placeholder.png";
@@ -299,48 +303,36 @@ function AssetPage() {
             />
             {modelUrl && !modelError && (
               <div
-                className={`thumbnail model-thumbnail ${viewMode === 'model' ? 'active' : ''}`}
+                className={`asset-view-model-thumbnail ${viewMode === 'model' ? 'active' : ''}`}
                 onClick={() => setViewMode('model')}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  background: "#232329",
-                  color: "#a78bfa",
-                  borderRadius: "8px",
-                  padding: "0 12px",
-                  marginLeft: "8px",
-                  fontWeight: "bold"
-                }}
               >
-                <span>Modelo 3D</span>
+                <span>3D</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="asset-info-section">
-          <h1 className="asset-title">{asset.titulo}</h1>
-          <div className="author-section">
-            <i className="fa fa-user-circle author-icon" />
-            <span className="author-name">
+        <div className="asset-view-info-section">
+          <h1 className="asset-view-title">{asset.titulo}</h1>
+          <div className="asset-view-author-section">
+            <i className="fa fa-user-circle asset-view-author-icon" />
+            <span className="asset-view-author-name">
               {author ? `${author.nombre}` : "Cargando..."}
             </span>
           </div>
 
-          <div className="tags">
+          <div className="asset-view-tags">
             {asset.tags?.map((tag, index) => (
-              <span className="tag" key={index}>
+              <span className="asset-view-tag" key={index}>
                 {tag}
               </span>
             ))}
           </div>
 
-          <div className="details">
-            <div className="detail-row">
-              <span className="label">Fecha</span>
-              <span className="value">
+          <div className="asset-view-details">
+            <div className="asset-view-detail-row">
+              <span className="asset-view-label">Fecha</span>
+              <span className="asset-view-value">
                 {new Date(asset.fechaSubida).toLocaleDateString("es-ES", {
                   year: "numeric",
                   month: "long",
@@ -348,22 +340,22 @@ function AssetPage() {
                 })}
               </span>
             </div>
-            <div className="detail-row">
-              <span className="label">Categoria</span>
-              <span className="value">{asset.categoria}</span>
+            <div className="asset-view-detail-row">
+              <span className="asset-view-label">Categoria</span>
+              <span className="asset-view-value">{asset.categoria}</span>
             </div>
-            <div className="detail-row">
-              <span className="label">Likes</span>
-              <span className="value">{likesCount}</span>
+            <div className="asset-view-detail-row">
+              <span className="asset-view-label">Likes</span>
+              <span className="asset-view-value">{likesCount}</span>
             </div>
           </div>
 
-          <div className="buttons">
-            <button className="primary" onClick={handleDownload}>
+          <div className="asset-view-buttons">
+            <button className="asset-view-primary" onClick={handleDownload}>
               Descargar ahora
             </button>
             <button 
-              className={`secondary ${isLiked ? 'liked' : ''}`}
+              className={`asset-view-secondary ${isLiked ? 'asset-view-liked' : ''}`}
               onClick={handleLikeToggle}
               style={{ 
                 display: 'flex', 
@@ -381,18 +373,16 @@ function AssetPage() {
         </div>
       </div>
 
-      <div className="asset-description">
+      <div className="asset-view-description">
         <h2>Descripción del producto</h2>
         <p>{asset.descripcion}</p>
       </div>
 
-      {/* Comments Section */}
-      <div className="comments-section">
+      <div className="asset-view-comments">
         <h3>Comentarios ({comments.length})</h3>
         
-        {/* Comment input */}
-        <form className="comment-input" onSubmit={handleCommentSubmit}>
-          <div className="user-icon">
+        <form className="asset-view-comment-input" onSubmit={handleCommentSubmit}>
+          <div className="asset-view-user-icon">
             <FiMessageSquare size={24} />
           </div>
           <input 
@@ -404,36 +394,25 @@ function AssetPage() {
           />
           <button 
             type="submit" 
-            style={{ 
-              background: '#8e6dfd', 
-              border: 'none', 
-              borderRadius: '50%', 
-              padding: '10px', 
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
             disabled={!currentUser || !newComment.trim()}
           >
             <FiSend color="#fff" size={16} />
           </button>
         </form>
         
-        {/* Comments list */}
-        <div className="comments-list">
+        <div className="asset-view-comments-list">
           {comments.length === 0 ? (
             <p style={{ color: '#aaa', textAlign: 'center', marginTop: '20px' }}>No hay comentarios aún. ¡Sé el primero en comentar!</p>
           ) : (
             comments.map((comment) => (
-              <div className="comment" key={comment._id}>
-                <div className="user-icon">
+              <div className="asset-view-comment" key={comment._id}>
+                <div className="asset-view-user-icon">
                   <FiMessageSquare size={24} />
                 </div>
-                <div className="comment-content">
+                <div className="asset-view-comment-content">
                   <div>
-                    <span className="username">{comment.userName}</span>
-                    <span className="timestamp">
+                    <span className="asset-view-username">{comment.userName}</span>
+                    <span className="asset-view-timestamp">
                       {new Date(comment.timestamp).toLocaleDateString("es-ES", {
                         year: "numeric",
                         month: "short",
@@ -443,7 +422,6 @@ function AssetPage() {
                       })}
                     </span>
                     
-                    {/* Delete button (only visible for comment owner or asset owner) */}
                     {currentUser && (currentUser.id === comment.userId || currentUser.id === asset.autorId) && (
                       <button 
                         onClick={() => handleDeleteComment(comment._id)}
@@ -461,7 +439,7 @@ function AssetPage() {
                       </button>
                     )}
                   </div>
-                  <p className="comment-text">{comment.text}</p>
+                  <p className="asset-view-comment-text">{comment.text}</p>
                 </div>
               </div>
             ))
@@ -469,44 +447,43 @@ function AssetPage() {
         </div>
       </div>
 
-      {/* Carrusel de otros assets */}
-      <div className="related-assets-section">
+      <div className="asset-view-related-section">
         <h2>Más assets</h2>
-        <div className="carousel-container">
+        <div className="asset-view-carousel">
           {randomAssets.map((a) => (
             <Link
               to={`/asset/${a._id}`}
               key={a._id}
-              className="nova-asset-card"
+              className="asset-view-card"
             >
-              <div className="nova-asset-image-container">
+              <div className="asset-view-card-image-container">
                 <img
                   src={a.imagen ? a.imagen : "/images/placeholder.png"}
                   alt={a.titulo}
-                  className="nova-asset-image"
+                  className="asset-view-card-image"
                   onError={(e) => {
                     e.target.src = "/images/placeholder.png";
                   }}
                 />
               </div>
-              <div className="nova-asset-info">
-                <h4 className="nova-asset-title">{a.titulo}</h4>
+              <div className="asset-view-card-info">
+                <h4 className="asset-view-card-title">{a.titulo}</h4>
                 
-                <div className="nova-asset-tags">
+                <div className="asset-view-card-tags">
                   {a.tags && a.tags.slice(0, 2).map((tag, index) => (
-                    <span key={index} className="nova-asset-tag">{tag}</span>
+                    <span key={index} className="asset-view-card-tag">{tag}</span>
                   ))}
                   {a.tags && a.tags.length > 2 && (
-                    <span className="nova-asset-tag-more">+{a.tags.length - 2}</span>
+                    <span className="asset-view-card-tag-more">+{a.tags.length - 2}</span>
                   )}
                 </div>
                 
-                <div className="nova-asset-footer">
-                  <div className="nova-asset-stat">
-                    <FiHeart className="nova-stat-icon" />
+                <div className="asset-view-card-footer">
+                  <div className="asset-view-card-stat">
+                    <FiHeart />
                     <span>{a.likes?.length || 0}</span>
                   </div>
-                  <span className="nova-asset-date">
+                  <span className="asset-view-card-date">
                     {new Date(a.fechaSubida || Date.now()).toLocaleDateString("es-ES", {
                       year: "numeric",
                       month: "short",
@@ -520,15 +497,15 @@ function AssetPage() {
         </div>
       </div>
       {showLoginPopup && (
-        <div className="modal-backdrop">
-          <div className="modal">
+        <div className="asset-view-modal-backdrop">
+          <div className="asset-view-modal">
             <h3>Inicia sesión para continuar</h3>
             <p>Debes tener una cuenta para interactuar con este asset.</p>
             <Link to="/login">
-              <button className="primary">Ir a iniciar sesión</button>
+              <button className="asset-view-primary">Ir a iniciar sesión</button>
             </Link>
             <button
-              className="secondary"
+              className="asset-view-secondary"
               onClick={() => setShowLoginPopup(false)}
             >
               Cerrar
