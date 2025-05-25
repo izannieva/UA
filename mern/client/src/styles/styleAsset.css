@@ -29,19 +29,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
-  margin-top: 3%;
-  background-color: #101014;
+  padding: 40px 20px 60px;
+  margin-top: 60px;
+  background: linear-gradient(to bottom, #101014, #141418);
   color: white;
-  font-family: sans-serif;
-  gap: 24px;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  gap: 32px;
   min-height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
+/* Mejora del contenedor principal */
 .asset-view-main {
   display: flex;
   flex-direction: row;
@@ -49,8 +51,25 @@
   width: 100%;
   max-width: 1200px;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
 }
 
+/* Efecto de degradado sutil para el fondo */
+.asset-view-page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 15% 50%, rgba(137, 109, 235, 0.08) 0%, transparent 45%),
+              radial-gradient(circle at 85% 30%, rgba(167, 139, 250, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Mejora de la sección de imagen con sombras más refinadas */
 .asset-view-image-section {
   flex: 2;
   min-width: 300px;
@@ -58,9 +77,12 @@
   background: linear-gradient(145deg, #1a1a1f 0%, #232329 100%);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3),
+              0 8px 12px rgba(0,0,0,0.15),
+              inset 0 1px 1px rgba(255,255,255,0.05);
   height: 600px;
   transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 /* Contenedor para imágenes */
@@ -72,6 +94,19 @@
   justify-content: center;
   position: relative;
   overflow: hidden;
+}
+
+.asset-view-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, 
+    rgba(26, 26, 31, 0.1) 0%, 
+    transparent 15%);
+  pointer-events: none;
 }
 
 /* Mejora de la imagen principal */
@@ -103,8 +138,12 @@
   bottom: 20px;
   right: 20px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   z-index: 10;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  border-radius: 30px;
+  padding: 8px 12px;
 }
 
 .asset-view-model-button {
@@ -119,12 +158,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .asset-view-model-button:hover {
   background: rgba(167, 139, 250, 0.4);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 15px rgba(167, 139, 250, 0.4);
 }
 
 /* Mejora de miniaturas */
@@ -189,26 +229,30 @@
   flex: 1;
   background: linear-gradient(145deg, #1a1a1f 0%, #232329 100%);
   border-radius: 20px;
-  padding: 30px;
+  padding: 35px 30px;
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   min-width: 280px;
-  max-width: 340px;
+  max-width: 360px;
   align-self: flex-start;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.25),
+              0 8px 12px rgba(0,0,0,0.15),
+              inset 0 1px 1px rgba(255,255,255,0.05);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .asset-view-title {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   background: linear-gradient(90deg, #a78bfa, #c4b5fd);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 .asset-view-author-section {
@@ -218,12 +262,12 @@
   gap: 10px;
   font-weight: 500;
   color: #d4d4d8;
-  padding: 8px 0;
-  margin: 0 auto;
-  background: rgba(167, 139, 250, 0.05);
+  margin: 5px auto 15px;
+  background: rgba(167, 139, 250, 0.08);
   border-radius: 40px;
   width: fit-content;
-  padding: 5px 15px;
+  padding: 8px 18px;
+  border: 1px solid rgba(167, 139, 250, 0.15);
 }
 
 .asset-view-author-icon {
@@ -295,19 +339,43 @@
 .asset-view-primary {
   background: linear-gradient(135deg, #9d74fa 0%, #7953f3 100%);
   color: white;
-  padding: 14px;
+  padding: 16px;
   border-radius: 12px;
   font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4),
+              0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
+  letter-spacing: 0.01em;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de brillo al hover */
+.asset-view-primary:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  background: linear-gradient(45deg, 
+    transparent, rgba(255, 255, 255, 0.1), transparent);
+  z-index: -1;
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.asset-view-primary:hover:before {
+  transform: translateX(100%);
 }
 
 .asset-view-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(167, 139, 250, 0.6);
+  box-shadow: 0 8px 25px rgba(167, 139, 250, 0.6),
+              0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
 .asset-view-secondary {
@@ -335,11 +403,14 @@
   width: 100%;
   max-width: 1200px;
   margin-top: 50px;
-  padding: 30px;
+  padding: 35px;
   background: linear-gradient(145deg, #1a1a1f 0%, #232329 100%);
-  border-radius: 16px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2),
+              inset 0 1px 1px rgba(255,255,255,0.05);
   border: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 1;
 }
 
 .asset-view-description h2 {
@@ -367,17 +438,22 @@
   color: #c4c4cc;
 }
 
+/* Contenedor principal del carrusel mejorado */
 .asset-view-related-section {
   margin-top: 60px;
   width: 100%;
   max-width: 1200px;
-  padding: 30px;
+  padding: 35px;
   background: linear-gradient(145deg, #1a1a1f 0%, #232329 100%);
-  border-radius: 16px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2),
+              inset 0 1px 1px rgba(255,255,255,0.05);
   border: 1px solid rgba(255, 255, 255, 0.03);
+  position: relative;
+  z-index: 1;
 }
 
+/* Título de la sección mejorado */
 .asset-view-related-section h2 {
   font-size: 1.5rem;
   margin-bottom: 25px;
@@ -385,6 +461,9 @@
   position: relative;
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .asset-view-related-section h2::after {
@@ -397,22 +476,75 @@
   background: linear-gradient(90deg, #a78bfa, transparent);
 }
 
+/* Contenedor del carrusel con flechas de navegación */
+.asset-view-carousel-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+}
+
+/* Botones de navegación del carrusel */
+.asset-view-carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(167, 139, 250, 0.15);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(167, 139, 250, 0.3);
+  color: white;
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  opacity: 0.7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.asset-view-carousel-nav:hover {
+  opacity: 1;
+  background: rgba(167, 139, 250, 0.3);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.asset-view-carousel-nav.prev {
+  left: -22px;
+}
+
+.asset-view-carousel-nav.next {
+  right: -22px;
+}
+
+/* Carrusel mejorado con scroll suave */
 .asset-view-carousel {
   display: flex;
   gap: 20px;
   overflow-x: auto;
-  padding: 10px 5px 25px 5px;
+  padding: 15px 5px 25px 5px;
+  scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: #a78bfa #232329;
+  -webkit-overflow-scrolling: touch;
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  -ms-overflow-style: none;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 20px;
 }
 
 .asset-view-carousel::-webkit-scrollbar {
   height: 6px;
+  background: transparent;
 }
 
 .asset-view-carousel::-webkit-scrollbar-track {
-  background: #232329;
+  background: rgba(35, 35, 41, 0.3);
   border-radius: 10px;
+  margin: 0 30px;
 }
 
 .asset-view-carousel::-webkit-scrollbar-thumb {
@@ -420,41 +552,58 @@
   border-radius: 10px;
 }
 
+/* Mejora de las tarjetas del carrusel */
 .asset-view-card {
-  min-width: 200px;
-  max-width: 240px;
-  height: auto;
+  min-width: 280px;
+  max-width: 320px;
+  height: 260px;
   flex-shrink: 0;
   background: linear-gradient(145deg, #1e1e24 0%, #28282f 100%);
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   border: 1px solid rgba(255, 255, 255, 0.03);
   text-decoration: none;
+  position: relative;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
 }
 
 .asset-view-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-  border-color: rgba(167, 139, 250, 0.2);
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4), 
+              0 0 0 1px rgba(167, 139, 250, 0.3);
 }
 
 .asset-view-card-image-container {
-  height: 150px;
+  height: 160px;
   width: 100%;
   overflow: hidden;
+  position: relative;
 }
 
 .asset-view-card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.8s ease;
 }
 
 .asset-view-card:hover .asset-view-card-image {
   transform: scale(1.08);
+}
+
+/* Overlay para imágenes */
+.asset-view-card-image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+  height: 50%;
+  pointer-events: none;
 }
 
 .asset-view-card-info {
@@ -462,10 +611,12 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 1;
+  justify-content: space-between;
 }
 
 .asset-view-card-title {
-  font-size: 1rem;
+  font-size: 1.1rem;
   color: #e5e5ea;
   margin: 0;
   font-weight: 600;
@@ -504,13 +655,26 @@
   background: rgba(167, 139, 250, 0.1);
   color: #a78bfa;
   border: 1px solid rgba(167, 139, 250, 0.2);
+  transition: all 0.3s ease;
+}
+
+.asset-view-card:hover .asset-view-card-tag {
+  background: rgba(167, 139, 250, 0.2);
+  transform: translateY(-2px);
+}
+
+.asset-view-card-tag-more {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 30px;
+  background: rgba(100, 100, 120, 0.2);
+  color: #bbb;
 }
 
 .asset-view-card-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -522,197 +686,45 @@
   color: #ccc;
 }
 
-/* Sección de comentarios mejorada */
-.asset-view-comments {
-  margin-top: 50px;
-  color: white;
-  font-family: inherit;
-  max-width: 1000px;
-  width: 100%;
-  background: linear-gradient(145deg, #1a1a1f 0%, #232329 100%);
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-  border: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.asset-view-comments h3 {
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-  color: #e5e5ea;
-  position: relative;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(167, 139, 250, 0.2);
-}
-
-.asset-view-comments h3::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 80px;
-  height: 2px;
-  background: linear-gradient(90deg, #a78bfa, transparent);
-}
-
-.asset-view-comment-input {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
-  width: 100%;
-  background: rgba(15, 15, 20, 0.3);
-  border-radius: 50px;
-  padding: 8px 8px 8px 15px;
-  border: 1px solid rgba(167, 139, 250, 0.1);
-  transition: border-color 0.3s ease;
-}
-
-.asset-view-comment-input:focus-within {
-  border-color: rgba(167, 139, 250, 0.4);
-}
-
-.asset-view-comment-input .asset-view-user-icon {
-  color: #a78bfa;
-  font-size: 1.3rem;
-  min-width: 24px;
-}
-
-.asset-view-comment-input input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 12px 5px;
-  color: #e5e5ea;
-  font-size: 0.95rem;
-}
-
-.asset-view-comment-input input:focus {
-  outline: none;
-}
-
-.asset-view-comment-input input::placeholder {
-  color: #8c8c9a;
-}
-
-.asset-view-comment-input button {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #9d74fa 0%, #7953f3 100%);
-  border: none;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-}
-
-.asset-view-comment-input button:hover:not(:disabled) {
-  transform: scale(1.05);
-  box-shadow: 0 5px 15px rgba(167, 139, 250, 0.4);
-}
-
-.asset-view-comment-input button:disabled {
-  background: #444;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.asset-view-comment {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-  width: 100%;
-  transition: transform 0.2s ease;
-}
-
-.asset-view-comment:hover {
-  transform: translateY(-2px);
-}
-
-.asset-view-comment .asset-view-user-icon {
-  color: #a78bfa;
-  font-size: 1.5rem;
-  min-width: 24px;
-  margin-top: 5px;
-}
-
-.asset-view-comment-content {
-  background: rgba(45, 45, 55, 0.8);
-  padding: 16px 20px;
-  border-radius: 14px;
-  color: #e5e5ea;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  position: relative;
-}
-
-.asset-view-comment-content::before {
-  content: '';
-  position: absolute;
-  left: -8px;
-  top: 15px;
-  width: 0;
-  height: 0;
-  border-top: 8px solid transparent;
-  border-right: 8px solid rgba(45, 45, 55, 0.8);
-  border-bottom: 8px solid transparent;
-}
-
-.asset-view-comment-content .asset-view-username {
-  font-weight: bold;
-  color: #a78bfa;
-}
-
-.asset-view-comment-content .asset-view-timestamp {
-  color: #8c8c9a;
+.asset-view-card-date {
   font-size: 0.8rem;
+  color: #888;
 }
 
-.asset-view-comment-content .asset-view-comment-text {
-  margin-top: 10px;
-  line-height: 1.5;
+/* Badge para destacar assets nuevos */
+.asset-view-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #a78bfa, #7c3aed);
+  color: white;
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.5);
 }
 
-.asset-view-modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7);
+/* Estado activo para indicar el elemento actual */
+.asset-view-carousel-indicator {
   display: flex;
-  align-items: center;
   justify-content: center;
-  z-index: 999;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.asset-view-modal {
-  background: #1e1e1e;
-  padding: 2rem;
-  border-radius: 10px;
-  text-align: center;
-  width: 300px;
-  max-width: 100%;
-}
-
-.asset-view-liked {
-  border: 1px solid rgba(167, 139, 250, 0.5) !important;
-}
-
-.asset-view-liked svg {
-  stroke: #a78bfa;
-}
-
-.asset-view-comments-list {
+  gap: 8px;
   margin-top: 20px;
 }
 
-.asset-view-timestamp {
-  margin-left: 10px;
-  font-size: 0.75rem;
-  color: #aaa;
+.asset-view-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.2);
+  transition: all 0.3s ease;
+}
+
+.asset-view-carousel-dot.active {
+  background: #a78bfa;
+  transform: scale(1.2);
 }
 
 /* Responsive Styles */
@@ -732,7 +744,8 @@
 
 @media (max-width: 768px) {
   .asset-view-page {
-    padding: 20px 12px;
+    padding: 20px 12px 50px;
+    margin-top: 40px;
   }
   
   .asset-view-main {
@@ -741,9 +754,7 @@
   }
   
   .asset-view-image-section {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 400px !important;
+    height: 400px !important;
   }
   
   .asset-view-model-container {
@@ -787,33 +798,8 @@
     height: 300px !important;
   }
   
-  .asset-view-title {
-    font-size: 1.1rem;
-  }
-  
-  .asset-view-description h2 {
-    font-size: 1.2rem;
-  }
-  
-  .asset-view-thumbnail {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .asset-view-comments h3 {
-    font-size: 1rem;
-  }
-  
-  .asset-view-comment-input {
-    gap: 0.5rem;
-  }
-  
-  .asset-view-comment-input .asset-view-user-icon {
-    font-size: 1.5rem;
-  }
-  
-  .asset-view-comment-input input {
-    padding: 0.6rem;
+  .asset-view-comment-content {
+    padding: 15px 18px;
   }
   
   .asset-view-card {
@@ -824,4 +810,42 @@
     width: 85%;
     padding: 1.5rem;
   }
+}
+
+/* Añadir efecto de carga con skeleton para imágenes */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.asset-view-image-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    #232329 0%, 
+    #2b2b33 20%, 
+    #232329 40%, 
+    #232329 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.asset-view-main-image:not([src]), 
+.asset-view-main-image[src=""] {
+  opacity: 0;
+}
+
+.asset-view-main-image:not([src]) + .asset-view-image-loading, 
+.asset-view-main-image[src=""] + .asset-view-image-loading {
+  opacity: 1;
 }

@@ -1,7 +1,7 @@
 import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { FiHeart, FiMessageSquare, FiSend, FiTrash2 } from "react-icons/fi"; // Import icons
+import { FiHeart, FiMessageSquare, FiSend, FiTrash2, FiRefreshCw, FiRotateCcw, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import "../styles/styleAsset.css";
 
@@ -291,6 +291,7 @@ function AssetPage() {
                   e.target.src = "/images/placeholder.png";
                 }}
               />
+              <div className="asset-view-image-loading"></div>
             </div>
           )}
 
@@ -315,12 +316,12 @@ function AssetPage() {
           </div>
         </div>
 
-        <div className="asset-info-section">
-          <h1 className="asset-title">{asset.titulo}</h1>
-          <div className="author-section">
-            <i className="fa fa-user-circle author-icon" />
+        <div className="asset-view-info-section">
+          <h1 className="asset-view-title">{asset.titulo}</h1>
+          <div className="asset-view-author-section">
+            <i className="fa fa-user-circle asset-view-author-icon" />
             
-            <span className="author-name">
+            <span className="asset-view-author-name">
               Subido por:{author
                 ? author.usuario || "Sin nombre"
                 : "Cargando..."}
@@ -454,52 +455,105 @@ function AssetPage() {
       </div>
 
       <div className="asset-view-related-section">
-        <h2>Más assets</h2>
-        <div className="asset-view-carousel">
-          {randomAssets.map((a) => (
-            <Link
-              to={`/asset/${a._id}`}
-              key={a._id}
-              className="asset-view-card"
-            >
-              <div className="asset-view-card-image-container">
-                <img
-                  src={a.imagen ? a.imagen : "/images/placeholder.png"}
-                  alt={a.titulo}
-                  className="asset-view-card-image"
-                  onError={(e) => {
-                    e.target.src = "/images/placeholder.png";
-                  }}
-                />
-              </div>
-              <div className="asset-view-card-info">
-                <h4 className="asset-view-card-title">{a.titulo}</h4>
-                
-                <div className="asset-view-card-tags">
-                  {a.tags && a.tags.slice(0, 2).map((tag, index) => (
-                    <span key={index} className="asset-view-card-tag">{tag}</span>
-                  ))}
-                  {a.tags && a.tags.length > 2 && (
-                    <span className="asset-view-card-tag-more">+{a.tags.length - 2}</span>
-                  )}
-                </div>
-                
-                <div className="asset-view-card-footer">
-                  <div className="asset-view-card-stat">
-                    <FiHeart />
-                    <span>{a.likes?.length || 0}</span>
+        <h2>
+          Más assets
+          {/* Aquí podrías agregar un botón "Ver todos" si lo deseas */}
+        </h2>
+        
+        <div className="asset-view-carousel-wrapper">
+          {/* Botones de navegación */}
+          <button 
+            className="asset-view-carousel-nav prev"
+            onClick={() => {
+              const carousel = document.querySelector('.asset-view-carousel');
+              carousel.scrollBy({left: -600, behavior: 'smooth'});
+            }}
+          >
+            <FiChevronLeft size={24} />
+          </button>
+          
+          <button 
+            className="asset-view-carousel-nav next"
+            onClick={() => {
+              const carousel = document.querySelector('.asset-view-carousel');
+              carousel.scrollBy({left: 600, behavior: 'smooth'});
+            }}
+          >
+            <FiChevronRight size={24} />
+          </button>
+          
+          <div className="asset-view-carousel">
+            {randomAssets.map((a, index) => {
+              // Verificar si el asset es nuevo (menos de 7 días)
+              const isNew = (Date.now() - new Date(a.fechaSubida || Date.now()).getTime()) < 7 * 24 * 60 * 60 * 1000;
+              
+              return (
+                <Link
+                  to={`/asset/${a._id}`}
+                  key={a._id}
+                  className="asset-view-card"
+                >
+                  {isNew && <span className="asset-view-card-badge">Nuevo</span>}
+                  
+                  <div className="asset-view-card-image-container">
+                    <img
+                      src={a.imagen ? a.imagen : "/images/placeholder.png"}
+                      alt={a.titulo}
+                      className="asset-view-card-image"
+                      onError={(e) => {
+                        e.target.src = "/images/placeholder.png";
+                      }}
+                    />
+                    <div className="asset-view-card-image-overlay"></div>
                   </div>
-                  <span className="asset-view-card-date">
-                    {new Date(a.fechaSubida || Date.now()).toLocaleDateString("es-ES", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric"
-                    })}
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
+                  
+                  <div className="asset-view-card-info">
+                    <div>
+                      <h4 className="asset-view-card-title">{a.titulo}</h4>
+                      
+                      <div className="asset-view-card-tags">
+                        {a.tags && a.tags.slice(0, 2).map((tag, index) => (
+                          <span key={index} className="asset-view-card-tag">{tag}</span>
+                        ))}
+                        {a.tags && a.tags.length > 2 && (
+                          <span className="asset-view-card-tag-more">+{a.tags.length - 2}</span>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="asset-view-card-footer">
+                      <div className="asset-view-card-stat">
+                        <FiHeart />
+                        <span>{a.likes?.length || 0}</span>
+                      </div>
+                      <span className="asset-view-card-date">
+                        {new Date(a.fechaSubida || Date.now()).toLocaleDateString("es-ES", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric"
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          
+          {/* Indicadores de posición (opcional) */}
+          <div className="asset-view-carousel-indicator">
+            {[...Array(Math.min(5, randomAssets.length))].map((_, i) => (
+              <div 
+                key={i} 
+                className={`asset-view-carousel-dot ${i === 0 ? 'active' : ''}`}
+                onClick={() => {
+                  const carousel = document.querySelector('.asset-view-carousel');
+                  const cardWidth = carousel.querySelector('.asset-view-card').offsetWidth;
+                  carousel.scrollTo({left: i * (cardWidth + 20), behavior: 'smooth'});
+                }}
+              ></div>
+            ))}
+          </div>
         </div>
       </div>
       {showLoginPopup && (
@@ -508,7 +562,7 @@ function AssetPage() {
             <h3>Inicia sesión para continuar</h3>
             <p>Debes tener una cuenta para interactuar con este asset.</p>
             <Link to="/login">
-              <button className="asset-view-primary">Ir a iniciar sesión</button>
+              <button className="asset-view_primary">Ir a iniciar sesión</button>
             </Link>
             <button
               className="asset-view-secondary"
