@@ -11,7 +11,7 @@ export const getAllAssets = async () => {
 export const createAsset = async (data) => {
     console.log("Datos que se insertarán en la base de datos:", data); // Log para depuración
     return await db.collection("Asset").insertOne(data);
-  };
+};
 
 export const getAssetById = async (id) => {
     return await db.collection("Asset").findOne({ _id: new ObjectId(id) });
@@ -66,7 +66,6 @@ export const deleteComment = async (assetId, commentId) => {
 };
 
 // Enhance the incrementViews function
-
 export const incrementViews = async (assetId) => {
     try {
         console.log(`📊 Incrementing view for asset ID: ${assetId}`);
@@ -88,4 +87,19 @@ export const incrementViews = async (assetId) => {
         console.error(`❌ Error incrementing view in DB:`, error);
         throw error;
     }
+};
+
+// ✅ Añadido para compatibilidad con assetControllers.js
+export const pushCommentToAsset = async (assetId, comment) => {
+    return await db.collection("Asset").updateOne(
+        { _id: new ObjectId(assetId) },
+        { $push: { comments: comment } }
+    );
+};
+
+export const removeCommentFromAsset = async (assetId, commentId) => {
+    return await db.collection("Asset").updateOne(
+        { _id: new ObjectId(assetId) },
+        { $pull: { comments: { _id: new ObjectId(commentId) } } }
+    );
 };
