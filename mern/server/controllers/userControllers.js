@@ -145,3 +145,33 @@ export const changePassword = async (req, res) => {
     res.status(500).json({ error: "Error al cambiar la contraseña" });
   }
 };
+
+// Obtener información pública de un usuario por ID
+export const getPublicUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({ error: "ID de usuario no proporcionado" });
+        }
+
+        const user = await getUserById(id);
+
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        // Devuelve solo información pública del usuario
+        const publicUser = {
+            usuario: user.usuario,
+            nombre: user.nombre,
+            correo: user.correo, // Opcional, si quieres mostrar el correo
+            pais: user.pais, // Opcional
+        };
+
+        res.json(publicUser);
+    } catch (error) {
+        console.error("Error al obtener usuario público:", error);
+        res.status(500).json({ error: "Error al obtener usuario público" });
+    }
+};

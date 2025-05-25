@@ -1,8 +1,9 @@
 import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { FiHeart, FiMessageSquare, FiSend, FiTrash2, FiRefreshCw, FiRotateCcw, FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { Link, useParams } from "react-router-dom";
+import { FiChevronLeft, FiChevronRight, FiHeart, FiMessageSquare, FiRefreshCw, FiRotateCcw, FiSend, FiTrash2 } from "react-icons/fi";
+import { Link, useNavigate, useParams } from "react-router-dom";
+
 import "../styles/styleAsset.css";
 
 // Componente para cargar y renderizar el modelo 3D
@@ -28,63 +29,54 @@ function AssetPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [currentUser, setCurrentUser] = useState(null);
+  const navigate = useNavigate();
 
   // Estado para el visor 3D
   const [modelError, setModelError] = useState(false);
   const [viewMode, setViewMode] = useState('image'); // 'image' o 'model'
 
   const API_URL = import.meta.env.VITE_API_URL;
+    // Redirigir si no hay token
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    navigate("/login");
+  }
+}, [navigate]);
 
-  // Get current user info
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch(`${API_URL}/user/perfil`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then((userData) => {
-          if (!userData.error) {
-            setCurrentUser(userData);
-          }
-        })
-        .catch((err) => console.error("Error fetching user data:", err));
-    }
-  }, [API_URL]);
+// Obtener datos del asset y cargar el autor
+useEffect(() => {
+  fetch(`${API_URL}/asset/${id}`)
+    .then((res) => res.json())
+    .then((data) => {
+      setAsset(data);
+      setComments(data.comments || []);
+      setLikesCount(data.likes?.length || 0);
+      if (currentUser && data.likes) {
+        setIsLiked(data.likes.includes(currentUser.id));
+      }
 
-  // First, get asset data effect (keep your existing one)
-  useEffect(() => {
-    fetch(`${API_URL}/asset/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAsset(data);
-        setComments(data.comments || []);
-        setLikesCount(data.likes?.length || 0);
-        if (currentUser && data.likes) {
-          setIsLiked(data.likes.includes(currentUser.id));
-        }
-        
-        if (data.autorId) {
-          const token = localStorage.getItem("token");
-          fetch(`${API_URL}/user/${data.autorId}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-            .then((res) => res.json())
-            .then((userData) => setAuthor(userData))
-            .catch((err) => console.error("Error al cargar el autor:", err));
-        }
-        // Si hay modelo, prefiere empezar en modo modelo
-        if (data.modelo) setViewMode('model');
-      })
-      .catch((err) => console.error("Error al cargar el asset:", err));
-  }, [id, currentUser, API_URL]);
+      // Obtener datos del autor usando la nueva ruta pública
+      if (data.autorId) {
+        fetch(`${API_URL}/user/public/${data.autorId}`)
+          .then((res) => res.json())
+          .then((userData) => setAuthor(userData))
+          .catch((err) => console.error("Error al cargar el autor:", err));
+      }
 
-  useEffect(() => {
-    fetch(`${API_URL}/asset`)
-      .then((res) => res.json())
-      .then((data) => setAssets(data))
-      .catch(() => setAssets([]));
-  }, [API_URL]);
+      // Si hay modelo, prefiere empezar en modo modelo
+      if (data.modelo) setViewMode('model');
+    })
+    .catch((err) => console.error("Error al cargar el asset:", err));
+}, [id, currentUser, API_URL]);
+
+// Cargar assets relacionados
+useEffect(() => {
+  fetch(`${API_URL}/asset`)
+    .then((res) => res.json())
+    .then((data) => setAssets(data))
+    .catch(() => setAssets([]));
+}, [API_URL]);
 
   const randomAssets = useMemo(() => {
     if (!assets.length || !asset) return [];
