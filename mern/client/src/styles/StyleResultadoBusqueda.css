@@ -1176,3 +1176,214 @@ h1 {
   position: relative;
   z-index: 20;
 }
+
+/* Fix for scrolling issues */
+html, body {
+  height: auto;
+  min-height: 100%;
+  overflow-y: auto !important;
+}
+
+.rb-search-container {
+  min-height: 100vh;
+  height: auto;
+  position: relative;
+  overflow-y: visible;
+}
+
+.rb-content {
+  min-height: calc(100vh - 60px);
+  overflow-y: visible;
+}
+
+/* Add background overlay for mobile sidebar */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+}
+
+/* Mobile Responsive Styles - Add at the end of your file */
+
+/* Sidebar toggle button */
+.sidebar-toggle-button {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #a78bfa;
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.3rem;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle-button:hover {
+  transform: scale(1.05);
+  background: #b89dff;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  /* Show the toggle button */
+  .sidebar-toggle-button {
+    display: flex;
+  }
+  
+  /* Position sidebar for mobile */
+  .ex-sidebar {
+    position: fixed;
+    top: 60px; /* Height of navbar */
+    left: 0;
+    height: calc(100vh - 60px);
+    width: 240px;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Show sidebar when open */
+  .ex-sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+  
+  /* Adjust main content when sidebar is closed */
+  .rb-content {
+    width: 100%;
+    margin-left: 0;
+  }
+  
+  /* Make the header more compact */
+  .rb-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 12px;
+  }
+  
+  .rb-title-container {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .rb-sort-container {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .ua-search-container {
+    width: 100%;
+  }
+  
+  /* Adjust the asset grid for mobile */
+  .rb-assets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 12px 0;
+  }
+  
+  /* Fix scrolling issues */
+  .rb-search-container {
+    overflow-y: auto !important;
+    height: auto;
+    position: relative;
+  }
+  
+  .rb-assets-scroll-area {
+    height: auto;
+    min-height: 50vh;
+    padding: 15px 12px 80px 12px;
+  }
+  
+  /* Make asset cards more touch-friendly */
+  .rb-asset-card {
+    min-height: 180px;
+  }
+  
+  .rb-asset-image-container {
+    padding-bottom: 65%;
+  }
+  
+  .rb-asset-info {
+    padding: 12px;
+  }
+  
+  /* Adjust pagination for touch */
+  .rb-pagination {
+    padding: 15px 10px;
+    gap: 5px;
+  }
+  
+  .rb-pagination-button {
+    min-width: 36px;
+    height: 36px;
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .rb-assets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+  }
+  
+  .rb-asset-title {
+    font-size: 0.9rem;
+  }
+  
+  .rb-asset-creator {
+    font-size: 0.75rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Landscape mode */
+@media (max-height: 500px) and (orientation: landscape) {
+  .rb-header {
+    padding: 10px;
+  }
+  
+  .ex-sidebar {
+    padding: 15px;
+  }
+  
+  .rb-assets-scroll-area {
+    padding-bottom: 60px;
+  }
+  
+  .sidebar-toggle-button {
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+}

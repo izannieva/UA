@@ -68,13 +68,13 @@ function Navbar({ isAuthenticated, setIsAuthenticated }) {
             </>
           ) : (
             <>
-              <Link to="/upload-asset" className="button upload-icon-button" title="Subir Asset">
-                <FaCloudUploadAlt size={22} />
+              <Link to="/upload-asset" className="button icon-button" title="Subir Asset">
+                <FaCloudUploadAlt size={20} />
               </Link>
-              <Link to="/perfil" className="button" title="Perfil">
-                <FaUserCircle size={22} />
+              <Link to="/perfil" className="button icon-button" title="Perfil">
+                <FaUserCircle size={20} />
               </Link>
-              <button onClick={handleLogout} className="button" title="Cerrar sesión">
+              <button onClick={handleLogout} className="button icon-button" title="Cerrar sesión">
                 <FaSignOutAlt size={20} />
               </button>
             </>

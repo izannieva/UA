@@ -108,14 +108,41 @@
   background: #c4b5fd;
 }
 
-/* Upload Icon Button */
-.upload-icon-button {
+/* Icon Button - Ensure exact same size for all three buttons */
+.navbar-actions .icon-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  width: 40px;
-  height: 40px;
+  padding: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: #a78bfa;
+  color: black;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Remove any default Link styles that might affect size */
+.navbar-actions a.icon-button {
+  text-decoration: none;
+  display: flex;
+}
+
+/* Make sure the icons are centered perfectly */
+.navbar-actions .icon-button svg {
+  display: block;
+  margin: auto;
+}
+
+.navbar-actions .icon-button:hover {
+  background: #c4b5fd;
+  transform: translateY(-2px);
+}
+
+/* Upload Icon Button */
+.upload-icon-button {
+  /* This can be removed or left empty */
 }
 
 /* Mobile Styles */
@@ -222,5 +249,15 @@
   
   .navbar-actions {
     gap: 8px;
+  }
+
+  .navbar-actions .icon-button {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+  }
+  
+  .navbar-actions {
+    gap: 10px;
   }
 }

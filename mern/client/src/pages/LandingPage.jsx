@@ -65,6 +65,21 @@ function LandingPage() {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  // Add this useEffect to close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuOpen && !event.target.closest('.sidebar') && 
+          !event.target.closest('.mobile-menu-toggle')) {
+        setMobileMenuOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <div className="landing-container">
       <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>

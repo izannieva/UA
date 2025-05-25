@@ -10,7 +10,8 @@ import {
   FiBox, 
   FiImage, 
   FiPackage,
-  FiFilter
+  FiFilter,
+  FiX
 } from 'react-icons/fi';
 
 function ResultadoBusqueda() {
@@ -24,6 +25,7 @@ function ResultadoBusqueda() {
   // Calculate items per page based on screen width
   const [itemsPerPage, setItemsPerPage] = useState(calculateItemsPerPage());
   const [sortOrder, setSortOrder] = useState("newest"); // Opciones: newest, oldest, a-z, z-a
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768); // Estado para controlar la barra lateral
   
   const location = useLocation();
   
@@ -103,6 +105,8 @@ function ResultadoBusqueda() {
   useEffect(() => {
     function handleResize() {
       setItemsPerPage(calculateItemsPerPage());
+      // Auto-open sidebar on large screens, close on mobile
+      setSidebarOpen(window.innerWidth > 768);
     }
 
     window.addEventListener('resize', handleResize);
@@ -196,11 +200,25 @@ function ResultadoBusqueda() {
   // Generate random rating for demo purposes
   const getRandomRating = () => (Math.random() * 2 + 3).toFixed(1); // Between 3.0 and 5.0
 
+  // Toggle sidebar visibility
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   // Dentro de la función de renderizado del componente
   return (
     <div className="rb-search-container rb-search-container-with-navbar">
-      {/* Barra lateral */}
-      <div className="ex-sidebar">
+      {/* Mobile sidebar toggle button */}
+      <button 
+        className="sidebar-toggle-button" 
+        onClick={toggleSidebar}
+        aria-label="Toggle sidebar"
+      >
+        {sidebarOpen ? <FiX /> : <FiFilter />}
+      </button>
+      
+      {/* Barra lateral con clase condicional */}
+      <div className={`ex-sidebar ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <h2 className="ex-cat-title">Explora</h2>
         <div className="ex-cat-filters">
           {categories.map((category) => (
