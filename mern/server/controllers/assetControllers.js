@@ -1,4 +1,12 @@
-import { createAsset, deleteAsset, getAllAssets, getAssetById, updateAsset } from "../models/assetModel.js";
+import {
+  createAsset,
+  deleteAsset,
+  getAllAssets,
+  getAssetById,
+  updateAsset,
+  pushCommentToAsset,
+  removeCommentFromAsset
+} from "../models/assetModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 
@@ -22,17 +30,10 @@ export const getAssets = async (req, res) => {
 // Añadir nuevo asset
 export const addAsset = async (req, res) => {
   try {
-    const {
-      titulo,
-      descripcion,
-      categoria,
-      fechaSubida
-    } = req.body;
+    const { titulo, descripcion, categoria, fechaSubida } = req.body;
 
-    // Procesar tags (puede ser string o array)
     let tags = req.body.tags;
     if (Array.isArray(tags)) {
-      // ok
     } else if (typeof tags === "string") {
       try {
         tags = JSON.parse(tags);
@@ -43,7 +44,6 @@ export const addAsset = async (req, res) => {
       tags = [];
     }
 
-    // Subida a Cloudinary
     let modeloUrl = null;
     let imagenUrl = null;
 
@@ -74,10 +74,10 @@ export const addAsset = async (req, res) => {
       tags,
       modelo: modeloUrl,
       autorId: req.user?.id || null,
+      comentarios: []
     };
 
     const result = await createAsset(newAsset);
-
     res.status(201).json({ message: "Asset creado exitosamente", id: result.insertedId });
   } catch (error) {
     console.error("❌ Error al crear el asset:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
@@ -85,7 +85,7 @@ export const addAsset = async (req, res) => {
   }
 };
 
-// Obtener un asset por ID
+// Obtener asset por ID
 export const getAsset = async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +99,7 @@ export const getAsset = async (req, res) => {
   }
 };
 
-// Eliminar un asset (solo el autor)
+// Eliminar asset
 export const borrarAsset = async (req, res) => {
   try {
     const { id } = req.params;
@@ -125,7 +125,7 @@ export const borrarAsset = async (req, res) => {
   }
 };
 
-// Editar un asset (solo el autora)
+// Editar asset
 export const editAsset = async (req, res) => {
   try {
     const { id } = req.params;
@@ -149,5 +149,46 @@ export const editAsset = async (req, res) => {
     res.json({ message: "Asset actualizado correctamente" });
   } catch (error) {
     res.status(500).json({ error: "Error al editar asset" });
+  }
+};
+
+// ✅ Añadir comentario
+export const addComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { texto } = req.body;
+    const autor = req.user?.id;
+
+    if (!texto || !autor) {
+      return res.status(400).json({ error: "Faltan datos para el comentario" });
+    }
+
+    const comentario = {
+      id: new Date().getTime().toString(), // puedes usar uuid si prefieres
+      autor,
+      texto,
+      fecha: new Date()
+    };
+
+    const result = await pushCommentToAsset(id, comentario);
+    res.status(200).json({ message: "Comentario añadido", comentario });
+  } catch (error) {
+    res.status(500).json({ error: "Error al añadir comentario" });
+  }
+};
+
+// ✅ Eliminar comentario
+export const deleteComment = async (req, res) => {
+  try {
+    const { id, commentId } = req.params;
+
+    const result = await removeCommentFromAsset(id, commentId);
+    if (!result.modifiedCount) {
+      return res.status(404).json({ error: "Comentario no encontrado o no eliminado" });
+    }
+
+    res.status(200).json({ message: "Comentario eliminado" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al eliminar comentario" });
   }
 };
