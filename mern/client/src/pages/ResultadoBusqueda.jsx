@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import "../styles/StyleResultadoBusqueda.css";
-import { 
-  FiArrowRight, 
-  FiSearch, 
-  FiStar, 
-  FiGrid, 
-  FiUser, 
-  FiBox, 
-  FiImage, 
-  FiPackage,
+import {
+  FiBox,
   FiFilter,
+  FiGrid,
+  FiImage,
+  FiPackage,
+  FiUser,
   FiX
 } from 'react-icons/fi';
+import { Link, useLocation } from "react-router-dom";
+import "../styles/StyleResultadoBusqueda.css";
 
 function ResultadoBusqueda() {
   const API_URL = import.meta.env.VITE_API_URL;  // <--- Declaración global aquí
@@ -286,20 +283,15 @@ function ResultadoBusqueda() {
                 key={asset._id.$oid || asset._id}
               >
                 <div className="rb-asset-image-container">
-                  <img
-                    src={
-                      asset.imagen
-                        ? asset.imagen // Usar directamente la URL de Cloudinary
-                        : "/images/asset-placeholder.png"
-                    }
-                    alt={asset.titulo || "Recurso"}
-                    className="rb-asset-image"
-                    onError={(e) => {
-                      e.target.src = "/images/asset-placeholder.png";
-                      e.target.onerror = null;
-                    }}
-                  />
-                  {/* Se ha eliminado el div que mostraba el tipo "3D" */}
+                  {asset.imagen && (
+                    <img
+                      src={asset.imagen}
+                      alt={asset.titulo || "Recurso"}
+                      className="rb-asset-image"
+                      onError={e => { e.target.style.display = "none"; }}
+                    />
+                  )}
+                  {/* Si no hay imagen, no se muestra nada */}
                 </div>
                 <div className="rb-asset-info">
                   <h3 className="rb-asset-title">{asset.titulo || "Recurso sin nombre"}</h3>

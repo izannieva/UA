@@ -1,20 +1,14 @@
 import { OrbitControls, Stage, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
 import { FiHeart, FiMessageSquare, FiSend, FiTrash2 } from "react-icons/fi"; // Import icons
+import { Link, useParams } from "react-router-dom";
 import "../styles/styleAsset.css";
 
 // Componente para cargar y renderizar el modelo 3D
-function Model({ modelUrl, onError }) {
-  try {
-    const { scene } = useGLTF(modelUrl);
-    return <primitive object={scene} />;
-  } catch (error) {
-    console.error("Error cargando el modelo:", error);
-    onError && onError(error);
-    return null;
-  }
+function Model({ modelUrl }) {
+  const { scene } = useGLTF(modelUrl);
+  return <primitive object={scene} />;
 }
 
 function AssetPage() {
@@ -68,7 +62,10 @@ function AssetPage() {
         }
         
         if (data.autorId) {
-          fetch(`${API_URL}/user/${data.autorId}`)
+          const token = localStorage.getItem("token");
+          fetch(`${API_URL}/user/${data.autorId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
             .then((res) => res.json())
             .then((userData) => setAuthor(userData))
             .catch((err) => console.error("Error al cargar el autor:", err));
@@ -324,8 +321,11 @@ function AssetPage() {
           <h1 className="asset-title">{asset.titulo}</h1>
           <div className="author-section">
             <i className="fa fa-user-circle author-icon" />
+            
             <span className="author-name">
-              {author ? `${author.nombre}` : "Cargando..."}
+              Subido por:{author
+                ? author.usuario || "Sin nombre"
+                : "Cargando..."}
             </span>
           </div>
 
