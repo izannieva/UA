@@ -44,6 +44,27 @@ useEffect(() => {
   }
 }, [navigate]);
 
+// Cargar usuario actual
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+  fetch(`${API_URL}/user/perfil`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())        
+    .then((data) => {
+      setCurrentUser(data);
+    })    
+    .catch((err) => {
+      console.error("Error al cargar el usuario:", err);
+      // Si hay un error, redirigir al login
+      localStorage.removeItem("token");
+      navigate("/login");
+    });
+}, [API_URL, navigate]);
+
 // Obtener datos del asset y cargar el autor
 useEffect(() => {
   fetch(`${API_URL}/asset/${id}`)
@@ -401,7 +422,9 @@ useEffect(() => {
         
         <div className="asset-view-comments-list">
           {comments.length === 0 ? (
-            <p style={{ color: '#aaa', textAlign: 'center', marginTop: '20px' }}>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+            <p style={{ color: '#aaa', textAlign: 'center', marginTop: '20px' }}>
+              No hay comentarios aún. ¡Sé el primero en comentar!
+            </p>
           ) : (
             comments.map((comment) => (
               <div className="asset-view-comment" key={comment._id}>
@@ -410,28 +433,27 @@ useEffect(() => {
                 </div>
                 <div className="asset-view-comment-content">
                   <div>
-                    <span className="asset-view-username">{comment.userName}</span>
+                    <span className="asset-view-username">{comment.userCorreo}</span>
                     <span className="asset-view-timestamp">
                       {new Date(comment.timestamp).toLocaleDateString("es-ES", {
                         year: "numeric",
                         month: "short",
                         day: "numeric",
                         hour: "2-digit",
-                        minute: "2-digit"
+                        minute: "2-digit",
                       })}
                     </span>
-                    
                     {currentUser && (currentUser.id === comment.userId || currentUser.id === asset.autorId) && (
-                      <button 
+                      <button
                         onClick={() => handleDeleteComment(comment._id)}
-                        style={{ 
-                          background: 'none', 
+                        style={{
+                          background: 'none',
                           border: 'none',
                           cursor: 'pointer',
                           color: '#e57373',
                           marginLeft: '10px',
                           display: 'inline-flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
                         }}
                       >
                         <FiTrash2 size={14} />

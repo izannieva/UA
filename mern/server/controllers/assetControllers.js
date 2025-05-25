@@ -1,14 +1,14 @@
-import { 
-  createAsset, 
-  deleteAsset, 
-  getAllAssets, 
-  getAssetById, 
-  updateAsset,
-  likeAsset as likeAssetModel,
-  unlikeAsset as unlikeAssetModel,
-  addComment as addCommentModel,
-  deleteComment as deleteCommentModel,
-  incrementViews,
+import {
+    addComment as addCommentModel,
+    createAsset,
+    deleteAsset,
+    deleteComment as deleteCommentModel,
+    getAllAssets,
+    getAssetById,
+    incrementViews,
+    likeAsset as likeAssetModel,
+    unlikeAsset as unlikeAssetModel,
+    updateAsset,
 } from "../models/assetModel.js";
 
 // Obtener todos los assets
@@ -200,38 +200,38 @@ export const unlikeAsset = async (req, res) => {
 // Add a comment to an asset
 export const addComment = async (req, res) => {
     try {
-        const { id } = req.params;
-        const { text } = req.body;
-        const userId = req.user.id;
-        const userName = req.user.nombre || "Usuario";
+        const { id } = req.params; // ID del asset
+        const { text } = req.body; // Texto del comentario
+        const userId = req.user.id; // ID del usuario autenticado
+        const userCorreo = req.user.correo; // Correo del usuario autenticado
 
         if (!text) {
             return res.status(400).json({ error: "El comentario no puede estar vacío" });
         }
 
-        // Verify if the asset exists
+        // Verificar si el asset existe
         const asset = await getAssetById(id);
         if (!asset) {
             return res.status(404).json({ error: "Asset no encontrado" });
         }
 
-        // Create the comment object
+        // Crear el objeto del comentario
         const comment = {
             userId,
-            userName,
+            userCorreo, // Agregar el correo del usuario
             text,
-            timestamp: new Date()
+            timestamp: new Date(),
         };
 
-        // Add the comment to the asset - now using the correctly named model function
+        // Agregar el comentario al asset
         await addCommentModel(id, comment);
-        
-        res.status(201).json({ 
+
+        res.status(201).json({
             message: "Comentario añadido correctamente",
-            comment
+            comment,
         });
     } catch (error) {
-        console.error("Error in addComment controller:", error);
+        console.error("Error al añadir comentario:", error);
         res.status(500).json({ error: "Error al añadir comentario" });
     }
 };
